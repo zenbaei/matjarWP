@@ -1,6 +1,13 @@
 plugins/*
 themes/*
 
-
-!plugins/matjar
-!plugins/matjar/**
+# Ignore everything else explicitly (optional clarity)
+ai1wm-backups/
+debug.log
+fonts/
+index.php
+languages/
+litespeed/
+logs/
+mu-plugins/
+uploads/

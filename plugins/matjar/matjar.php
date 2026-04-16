@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Matjar Core
- * Description: Core customizations for Matjar store
+ * Description: Core customizations for Matjar book store
  */
 
 if (!defined('ABSPATH')) {
