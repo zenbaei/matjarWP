@@ -16,3 +16,4 @@ require_once plugin_dir_path(__FILE__) . 'admin-image-zoom/admin-image-zoom.php'
 require_once plugin_dir_path(__FILE__) . 'writer-taxonomy/writer-taxonomy.php';
 require_once plugin_dir_path(__FILE__) . 'product-stock-enforcer/product-stock-enforcer.php';
 require_once plugin_dir_path(__FILE__) . 'product-weight-enforcer/product-weight-enforcer.php';
+require_once plugin_dir_path(__FILE__) . 'recently-viewed-cleaner/recently-viewed-cleaner.php';
