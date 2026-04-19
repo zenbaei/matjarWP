@@ -1,8 +1,8 @@
 <?php
 
 /**
- * Plugin Name: Matjar - Writer Taxonomy
- * Description: Adds book-related structure for WooCommerce products (Writers taxonomy).
+ * Plugin Name: Matjar - publisher Taxonomy
+ * Description: Adds book-related structure for WooCommerce products (publishers taxonomy).
  * Version: 1.0
  * Author: Islam Zenbaei
  */
@@ -12,24 +12,24 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Register Book Writer Taxonomy
+ * Register Book Publisher Taxonomy
  */
 add_action('init', function () {
 
     register_taxonomy(
-        'writer',
+        'publisher',
         'product',
         [
             'labels' => [
-                'name'              => 'Writers',
-                'singular_name'     => 'Writer',
-                'search_items'      => 'Search Writers',
-                'all_items'         => 'All Writers',
-                'edit_item'         => 'Edit Writer',
-                'update_item'       => 'Update Writer',
-                'add_new_item'      => 'Add New Writer',
-                'new_item_name'     => 'New Writer Name',
-                'menu_name'         => 'Writers',
+                'name'              => 'Publishers',
+                'singular_name'     => 'Publisher',
+                'search_items'      => 'Search Publishers',
+                'all_items'         => 'All Publishers',
+                'edit_item'         => 'Edit Publisher',
+                'update_item'       => 'Update Publisher',
+                'add_new_item'      => 'Add New Publisher',
+                'new_item_name'     => 'New Publisher Name',
+                'menu_name'         => 'Publishers',
             ],
 
             'public'            => true,
@@ -37,27 +37,27 @@ add_action('init', function () {
             'show_ui'           => true,
             'show_admin_column' => true,
             'show_in_rest'      => true,
-            'rest_base' => 'writer',
+            'rest_base' => 'publisher',
             // يخليها تظهر تحت Products
             'show_in_menu'      => 'edit.php?post_type=product',
-            'rewrite'           => ['slug' => 'writer']
+            'rewrite'           => ['slug' => 'publisher']
         ]
     );
 });
 
 /**
- * Manually save 'writer' taxonomy to product
+ * Manually save 'publisher' taxonomy to product
  **/
 add_action('woocommerce_rest_insert_product_object', function ($product, $request) {
 
-    if (!empty($request['writer']) && is_array($request['writer'])) {
+    if (!empty($request['publisher']) && is_array($request['publisher'])) {
 
-        $valid_terms = array_map('intval', $request['writer']);
+        $valid_terms = array_map('intval', $request['publisher']);
 
         wp_set_post_terms(
             $product->get_id(),
             $valid_terms,
-            'writer',
+            'publisher',
             false
         );
     }
@@ -80,19 +80,19 @@ register_deactivation_hook(__FILE__, function () {
 
 /**
  * ---------------------------------------------------------
- * 1️⃣ Remove default Writer taxonomy meta box
+ * 1️⃣ Remove default publisher taxonomy meta box
  * ---------------------------------------------------------
- * Removes the default checkbox list (writerdiv)
+ * Removes the default checkbox list (publisherdiv)
  * so we can replace it with a searchable dropdown.
  */
 add_action('admin_menu', function () {
-    remove_meta_box('writerdiv', 'product', 'side');
+    remove_meta_box('publisherdiv', 'product', 'side');
 });
 
 
 /**
  * ---------------------------------------------------------
- * 2️⃣ Add searchable Select2 dropdown for Writers
+ * 2️⃣ Add searchable Select2 dropdown for publishers
  * ---------------------------------------------------------
  * Uses WooCommerce built-in Select2 (wc-enhanced-select)
  * to provide a searchable dropdown instead of checkboxes.
@@ -100,14 +100,14 @@ add_action('admin_menu', function () {
 add_action('add_meta_boxes', function () {
 
     add_meta_box(
-        'writer_select_box',
-        'Writer',
+        'publisher_select_box',
+        'publisher',
         function ($post) {
 
-            // Get currently selected writer (single selection)
+            // Get currently selected publisher (single selection)
             $selected_terms = wp_get_post_terms(
                 $post->ID,
-                'writer',
+                'publisher',
                 ['fields' => 'ids']
             );
 
@@ -115,15 +115,15 @@ add_action('add_meta_boxes', function () {
                 ? $selected_terms[0]
                 : '';
 
-            // Get all writers
+            // Get all publishers
             $terms = get_terms([
-                'taxonomy'   => 'writer',
+                'taxonomy'   => 'publisher',
                 'hide_empty' => false,
             ]);
 
-            echo '<select name="writer[]" style="width:100%;" class="wc-enhanced-select">';
+            echo '<select name="publisher[]" style="width:100%;" class="wc-enhanced-select">';
 
-            echo '<option value="">Select writer</option>';
+            echo '<option value="">Select publisher</option>';
 
             if (!is_wp_error($terms) && !empty($terms)) {
                 foreach ($terms as $term) {
@@ -147,16 +147,16 @@ add_action('add_meta_boxes', function () {
 
 /**
  * ---------------------------------------------------------
- * 3️⃣ Validate required Writer before saving product
+ * 3️⃣ Validate required publisher before saving product
  * ---------------------------------------------------------
  */
 add_action('woocommerce_admin_process_product_object', function ($product) {
 
-    if (empty($_POST['writer']) || empty($_POST['writer'][0])) {
+    if (empty($_POST['publisher']) || empty($_POST['publisher'][0])) {
 
         // Stop saving and show error
         WC_Admin_Meta_Boxes::add_error(
-            __('Please select a Writer before saving the product.', 'woocommerce')
+            __('Please select a publisher before saving the product.', 'woocommerce')
         );
 
         return;
@@ -166,7 +166,7 @@ add_action('woocommerce_admin_process_product_object', function ($product) {
 
 /**
  * ---------------------------------------------------------
- * 4️⃣ Save Writer taxonomy when valid
+ * 4️⃣ Save publisher taxonomy when valid
  * ---------------------------------------------------------
  */
 add_action('save_post_product', function ($post_id) {
@@ -175,14 +175,14 @@ add_action('save_post_product', function ($post_id) {
         return;
     }
 
-    if (!empty($_POST['writer']) && is_array($_POST['writer'])) {
+    if (!empty($_POST['publisher']) && is_array($_POST['publisher'])) {
 
-        $writer_ids = array_map('intval', $_POST['writer']);
+        $publisher_ids = array_map('intval', $_POST['publisher']);
 
         wp_set_post_terms(
             $post_id,
-            $writer_ids,
-            'writer'
+            $publisher_ids,
+            'publisher'
         );
     }
 });
