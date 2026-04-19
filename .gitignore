@@ -1,7 +1,17 @@
+# Ignore all plugins and themes
 plugins/*
 themes/*
 
-# Ignore everything else explicitly (optional clarity)
+# ✅ Allow matjar plugin
+!plugins/matjar/
+!plugins/matjar/**
+
+# ✅ Allow xstore child theme
+themes/xstore/*          # re-ignore everything inside xstore
+!themes/xstore/xstore-child/
+!themes/xstore/xstore-child/**
+
+# Other ignores
 ai1wm-backups/
 debug.log
 fonts/
