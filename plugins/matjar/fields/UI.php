@@ -43,16 +43,16 @@ class UI
                 'default' => 1,
             ],
 
-            '_book_notes' => [
-                'label' => 'Notes',
-                'type'  => 'textarea',
-            ],
-
             '_book_year' => [
                 'label'   => 'Publishing Year',
                 'type'    => 'select',
                 'options' => $this->getYears(),
             ],
+
+            '_book_notes' => [
+                'label' => 'Notes',
+                'type'  => 'textarea',
+            ]
         ];
     }
 
@@ -76,7 +76,7 @@ class UI
     {
 
         $tabs['book_info'] = [
-            'label'    => __('Book Info', 'matjar-book-plugin'),
+            'label'    => __('Book Info', 'matjar-plugin'),
             'target'   => 'book_info_panel',
             'priority' => 25,
         ];
@@ -94,12 +94,10 @@ class UI
 
         echo '<div id="book_info_panel" class="panel woocommerce_options_panel">';
 
-        $this->renderDynamicFields($post->ID);
-
         // Complex fields
-        $this->renderSelect2Field($post->ID, '_book_authors', 'Authors');
         $this->renderSelect2Field($post->ID, '_book_editors', 'Editors');
-        $this->renderSelect2Field($post->ID, '_book_publisher', 'Publisher', false, 'search_publishers');
+
+        $this->renderDynamicFields($post->ID);
 
         echo '</div>';
     }
@@ -205,7 +203,7 @@ class UI
 
         foreach ($values as $id) {
 
-            $taxonomy = ($action === 'search_publishers') ? 'publisher' : 'writer';
+            $taxonomy = 'writer';
 
             $term = get_term($id, $taxonomy);
 

@@ -1,5 +1,7 @@
 <?php
 
+var_dump(function_exists('transliterator_transliterate'));
+
 /**
  * Plugin Name: Matjar - Writer Taxonomy
  * Description: Adds book-related structure for WooCommerce products (Writers taxonomy).
@@ -47,7 +49,9 @@ add_action('init', function () {
 
 /**
  * Manually save 'writer' taxonomy to product
+ * Make sure rest is handled correctly then remove this function
  **/
+/*
 add_action('woocommerce_rest_insert_product_object', function ($product, $request) {
 
     if (!empty($request['writer']) && is_array($request['writer'])) {
@@ -62,7 +66,7 @@ add_action('woocommerce_rest_insert_product_object', function ($product, $reques
         );
     }
 }, 20, 2);
-
+*/
 
 /**
  * Flush rewrite rules on activation
@@ -80,43 +84,33 @@ register_deactivation_hook(__FILE__, function () {
 
 
 /**
- * ---------------------------------------------------------
- * 3️⃣ Validate required Writer before saving product
- * ---------------------------------------------------------
+ * Slugify the arabic names of writers and publishers to make them URL-friendly.
  */
-add_action('woocommerce_admin_process_product_object', function ($product) {
+add_filter('wp_insert_term_data', function ($data, $taxonomy) {
 
-    if (empty($_POST['writer']) || empty($_POST['writer'][0])) {
+    if (!in_array($taxonomy, ['writer', 'publisher'])) {
+        return $data;
+    }
 
-        // Stop saving and show error
-        WC_Admin_Meta_Boxes::add_error(
-            __('Please select a Writer before saving the product.', 'woocommerce')
+    // if slug already set manually → keep it
+    if (!empty($data['slug'])) {
+        return $data;
+    }
+
+    $name = $data['name'];
+
+    if (function_exists('transliterator_transliterate')) {
+        $slug = transliterator_transliterate(
+            'Any-Latin; Latin-ASCII; Lower()',
+            $name
         );
-
-        return;
-    }
-});
-
-
-/**
- * ---------------------------------------------------------
- * 4️⃣ Save Writer taxonomy when valid
- * ---------------------------------------------------------
- */
-add_action('save_post_product', function ($post_id) {
-
-    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
-        return;
+    } else {
+        $slug = $name;
     }
 
-    if (!empty($_POST['writer']) && is_array($_POST['writer'])) {
+    $slug = sanitize_title($slug);
 
-        $writer_ids = array_map('intval', $_POST['writer']);
+    $data['slug'] = $slug;
 
-        wp_set_post_terms(
-            $post_id,
-            $writer_ids,
-            'writer'
-        );
-    }
-});
+    return $data;
+}, 10, 2);

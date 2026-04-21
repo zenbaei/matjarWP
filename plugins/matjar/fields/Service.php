@@ -50,10 +50,7 @@ class Service
         }
 
         // 🔥 Complex
-        $this->saveMulti('_book_authors', $postId);
         $this->saveMulti('_book_editors', $postId);
-
-        $this->saveSingle('_book_publisher', $postId);
     }
 
     /**
@@ -97,35 +94,6 @@ class Service
 
         $terms = get_terms([
             'taxonomy'   => 'writer',
-            'search'     => $search,
-            'hide_empty' => false,
-            'number'     => 20,
-        ]);
-
-        $results = [];
-
-        foreach ($terms as $term) {
-            $results[] = [
-                'id'   => $term->term_id,
-                'text' => $term->name,
-            ];
-        }
-
-        wp_send_json($results);
-    }
-
-    /**
-     * AJAX search publishers
-     */
-    public function searchPublishers(): void
-    {
-
-        check_ajax_referer('book_nonce', 'nonce');
-
-        $search = sanitize_text_field($_GET['term'] ?? '');
-
-        $terms = get_terms([
-            'taxonomy'   => 'publisher',
             'search'     => $search,
             'hide_empty' => false,
             'number'     => 20,

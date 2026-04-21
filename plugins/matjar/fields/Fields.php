@@ -40,8 +40,5 @@ class Fields
 
         // AJAX
         add_action('wp_ajax_search_writers', [$this->service, 'searchWriters']);
-
-        // AJAX
-        add_action('wp_ajax_search_publishers', [$this->service, 'searchPublishers']);
     }
 }
