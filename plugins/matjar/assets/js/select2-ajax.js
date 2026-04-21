@@ -46,7 +46,7 @@ jQuery(function ($) {
 
         // Required config
         let action = $el.data('action');
-        let nonce  = $el.data('nonce');
+        let nonce = $el.data('nonce');
 
         // Optional config
         let placeholder = $el.data('placeholder') || 'Search...';
@@ -65,7 +65,7 @@ jQuery(function ($) {
             allowClear: true,
 
             ajax: {
-                url: book_ajax.url,
+                url: ajaxurl,
                 dataType: 'json',
                 delay: 250, // debounce
 

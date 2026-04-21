@@ -9,6 +9,22 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+
+if (!defined('ABSPATH')) exit;
+
+// Define constants EARLY
+if (!defined('MATJAR_URL')) {
+    define('MATJAR_URL', plugin_dir_url(__FILE__));
+}
+
+if (!defined('MATJAR_PATH')) {
+    define('MATJAR_PATH', plugin_dir_path(__FILE__));
+}
+
+if (!defined('MATJAR_VERSION')) {
+    define('MATJAR_VERSION', '1.0.0');
+}
+
 $modules = [
     'media-folders/media-folders.php',
     'admin-image-zoom/admin-image-zoom.php',

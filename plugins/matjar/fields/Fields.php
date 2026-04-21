@@ -39,7 +39,7 @@ class Fields
         add_action('admin_enqueue_scripts', [$this->ui, 'enqueue']);
 
         // AJAX
-        add_action('wp_ajax_search_persons', [$this->service, 'searchPersons']);
+        add_action('wp_ajax_search_writers', [$this->service, 'searchWriters']);
 
         // AJAX
         add_action('wp_ajax_search_publishers', [$this->service, 'searchPublishers']);

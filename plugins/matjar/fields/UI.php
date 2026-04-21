@@ -2,6 +2,7 @@
 
 namespace Matjar\Fields;
 
+
 if (!defined('ABSPATH')) exit;
 
 /**
@@ -33,11 +34,13 @@ class UI
             '_book_series' => [
                 'label' => 'Series',
                 'type'  => 'number',
+                'default' => 1,
             ],
 
             '_book_edition' => [
                 'label' => 'Edition',
-                'type'  => 'text',
+                'type'  => 'number',
+                'default' => 1,
             ],
 
             '_book_notes' => [
@@ -61,7 +64,7 @@ class UI
     private function getYears(): array
     {
 
-        $years = range(date('Y'), 1950);
+        $years = range(date('Y'), 1900);
 
         return array_combine($years, $years);
     }
@@ -94,7 +97,7 @@ class UI
         $this->renderDynamicFields($post->ID);
 
         // Complex fields
-        $this->renderSelect2Field($post->ID, '_book_writers', 'Writers');
+        $this->renderSelect2Field($post->ID, '_book_authors', 'Authors');
         $this->renderSelect2Field($post->ID, '_book_editors', 'Editors');
         $this->renderSelect2Field($post->ID, '_book_publisher', 'Publisher', false, 'search_publishers');
 
@@ -110,6 +113,10 @@ class UI
         foreach ($this->getFields() as $key => $field) {
 
             $value = get_post_meta($postId, $key, true);
+
+            if ($value === '' && isset($field['default'])) {
+                $value = $field['default'];
+            }
 
             echo '<p class="form-field">';
             echo '<label>' . esc_html($field['label']) . '</label>';
@@ -137,6 +144,15 @@ class UI
                     echo '</select>';
                     break;
 
+                case 'checkbox':
+                    printf(
+                        '<label><input type="checkbox" name="%s" value="1" %s /> %s</label>',
+                        esc_attr($key),
+                        checked($value, '1', false),
+                        esc_html($field['label'])
+                    );
+                    break;
+
                 default:
                     printf(
                         '<input type="%s" name="%s" value="%s" />',
@@ -162,7 +178,7 @@ class UI
         string $metaKey,
         string $label,
         bool $multiple = true,
-        string $action = 'search_persons'
+        string $action = 'search_writers'
     ): void {
 
         $values = (array) get_post_meta($postId, $metaKey, true);
@@ -189,7 +205,7 @@ class UI
 
         foreach ($values as $id) {
 
-            $taxonomy = ($action === 'search_publishers') ? 'publisher' : 'person';
+            $taxonomy = ($action === 'search_publishers') ? 'publisher' : 'writer';
 
             $term = get_term($id, $taxonomy);
 
@@ -219,10 +235,5 @@ class UI
             MATJAR_VERSION,
             true
         );
-
-        wp_localize_script('select2-ajax', 'matjarAjax', [
-            'ajaxUrl' => esc_url(admin_url('admin-ajax.php')),
-            'debug'   => defined('WP_DEBUG') && WP_DEBUG,
-        ]);
     }
 }

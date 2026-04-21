@@ -33,7 +33,7 @@ add_action('init', function () {
             ],
 
             'public'            => true,
-            'hierarchical'      => true,
+            'hierarchical'      => false,
             'show_ui'           => true,
             'show_admin_column' => true,
             'show_in_rest'      => true,
@@ -76,72 +76,6 @@ register_activation_hook(__FILE__, function () {
  */
 register_deactivation_hook(__FILE__, function () {
     flush_rewrite_rules();
-});
-
-/**
- * ---------------------------------------------------------
- * 1️⃣ Remove default publisher taxonomy meta box
- * ---------------------------------------------------------
- * Removes the default checkbox list (publisherdiv)
- * so we can replace it with a searchable dropdown.
- */
-add_action('admin_menu', function () {
-    remove_meta_box('publisherdiv', 'product', 'side');
-});
-
-
-/**
- * ---------------------------------------------------------
- * 2️⃣ Add searchable Select2 dropdown for publishers
- * ---------------------------------------------------------
- * Uses WooCommerce built-in Select2 (wc-enhanced-select)
- * to provide a searchable dropdown instead of checkboxes.
- */
-add_action('add_meta_boxes', function () {
-
-    add_meta_box(
-        'publisher_select_box',
-        'publisher',
-        function ($post) {
-
-            // Get currently selected publisher (single selection)
-            $selected_terms = wp_get_post_terms(
-                $post->ID,
-                'publisher',
-                ['fields' => 'ids']
-            );
-
-            $selected = !empty($selected_terms)
-                ? $selected_terms[0]
-                : '';
-
-            // Get all publishers
-            $terms = get_terms([
-                'taxonomy'   => 'publisher',
-                'hide_empty' => false,
-            ]);
-
-            echo '<select name="publisher[]" style="width:100%;" class="wc-enhanced-select">';
-
-            echo '<option value="">Select publisher</option>';
-
-            if (!is_wp_error($terms) && !empty($terms)) {
-                foreach ($terms as $term) {
-                    printf(
-                        '<option value="%d" %s>%s</option>',
-                        $term->term_id,
-                        selected($selected, $term->term_id, false),
-                        esc_html($term->name)
-                    );
-                }
-            }
-
-            echo '</select>';
-        },
-        'product',
-        'side',
-        'default'
-    );
 });
 
 

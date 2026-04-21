@@ -50,7 +50,7 @@ class Service
         }
 
         // 🔥 Complex
-        $this->saveMulti('_book_writers', $postId);
+        $this->saveMulti('_book_authors', $postId);
         $this->saveMulti('_book_editors', $postId);
 
         $this->saveSingle('_book_publisher', $postId);
@@ -86,9 +86,9 @@ class Service
     }
 
     /**
-     * AJAX search writers/editors
+     * AJAX search authors/editors
      */
-    public function searchPersons(): void
+    public function searchWriters(): void
     {
 
         check_ajax_referer('book_nonce', 'nonce');
@@ -96,7 +96,7 @@ class Service
         $search = sanitize_text_field($_GET['term'] ?? '');
 
         $terms = get_terms([
-            'taxonomy'   => 'person',
+            'taxonomy'   => 'writer',
             'search'     => $search,
             'hide_empty' => false,
             'number'     => 20,
