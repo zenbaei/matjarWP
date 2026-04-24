@@ -37,6 +37,13 @@ jQuery(function ($) {
      */
     const cache = {};
 
+    // 🔥 expose cache reset globally
+    window.resetSelect2Cache = function () {
+        for (let key in cache) {
+            delete cache[key];
+        }
+    };
+
     /**
      * Initialize all Select2 fields
      */
@@ -99,17 +106,18 @@ jQuery(function ($) {
                 transport: function (params, success, failure) {
 
                     let term = params.data.term;
+                    let cacheKey = action + ':' + term;
 
                     // Return cached result if exists
-                    if (cache[term]) {
-                        success(cache[term]);
+                    if (cache[cacheKey]) {
+                        success(cache[cacheKey]);
                         return;
                     }
 
                     let request = $.ajax(params);
 
                     request.then(function (data) {
-                        cache[term] = data; // cache result
+                        cache[cacheKey] = data;
                         success(data);
                     });
 

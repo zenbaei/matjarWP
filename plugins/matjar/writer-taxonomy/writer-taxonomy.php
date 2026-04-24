@@ -1,7 +1,5 @@
 <?php
 
-var_dump(function_exists('transliterator_transliterate'));
-
 /**
  * Plugin Name: Matjar - Writer Taxonomy
  * Description: Adds book-related structure for WooCommerce products (Writers taxonomy).

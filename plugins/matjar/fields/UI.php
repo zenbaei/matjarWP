@@ -187,6 +187,7 @@ class UI
         printf(
             '<select 
             class="select2-ajax"
+            id="editors-select"
             name="%s%s"
             data-action="%s"
             data-nonce="%s"
