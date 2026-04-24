@@ -24,7 +24,6 @@ class Matjar_Checkout_Customizations
         add_filter('woocommerce_checkout_fields', [$this, 'toggleFieldsVisibility'], 999);
         add_action('woocommerce_checkout_process', [$this, 'sync_city_with_state']);
         add_action('wp_enqueue_scripts', [$this, 'enqueue_scripts'], 20);
-        //  add_filter('woocommerce_default_address_fields', [$this, 'custom_override_default_locale_fields']);
     }
 
     /**
@@ -67,6 +66,8 @@ class Matjar_Checkout_Customizations
 
     /**
      * Show state field as area for Egypt only.
+     * 
+     * It only shows on billing because shipping doesn't have this field, so we don't need to check it there.
      */
     private function showAreaForEgyptOnly(&$fields, $isEgypt)
     {
@@ -74,50 +75,7 @@ class Matjar_Checkout_Customizations
             $fields['billing']['billing_area']['class'][] =  $isEgypt ? 'hidden' : '';
             $fields['billing']['billing_area']['required'] =  $isEgypt ? false : true;
         }
-
-        if (isset($fields['shipping']['shipping_area'])) {
-            $fields['shipping']['shipping_area']['class'][] =  $isEgypt ? 'hidden' : '';
-            $fields['shipping']['shipping_area']['required'] =  $isEgypt ? false : true;
-        }
     }
-
-
-
-    /**
-     * Not renaming anymore.
-     */
-    public function changeStateLabel($fields)
-    {
-        if ($this->is_egypt_selected()) {
-            if (isset($fields['billing']['billing_state'])) {
-                $fields['billing']['billing_state']['label'] = 'المدينة';
-            }
-
-            if (isset($fields['shipping']['shipping_state'])) {
-                $fields['shipping']['shipping_state']['label'] = 'لمدينة';
-            }
-        }
-        return $fields;
-    }
-
-    /**
-     * This function worked for all fields except country and last name, So I used ordering from javascript file.
-     *
-    public function custom_override_default_locale_fields($fields)
-    {
-        $fields['first_name']['priority'] = 1;
-        $fields['last_name']['priority'] = 2;
-
-        $fields['country']['priority'] = 3;
-        $fields['city']['priority'] = 4;
-
-        $fields['state']['priority'] = 5;
-        $fields['address_1']['priority'] = 6;
-        $fields['address_2']['priority'] = 7;
-        return $fields;
-    }
-     */
-
 
     /**
      * Sync city field with state before checkout processing.

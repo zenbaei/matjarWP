@@ -15,24 +15,6 @@ jQuery(function ($) {
         return country === 'EG';
     }
 
-    /** 
-     * Not renaming state to city anymore...
-     * 
-    function updateStateLabel() {
-        return;
-        if (isEgypt()) {
-            $('label[for="billing_state"]').text('المدينة *');
-            $('label[for="shipping_state"]').text('المدينة *');
-
-        } else {
-
-            $('label[for="billing_state"]').text('المنطقة *');
-            $('label[for="shipping_state"]').text('المنطقة *');
-
-        }
-    }
-        */
-
     function triggerCheckoutUpdateOnStateChange() {
 
         $('form.checkout').on('change', 'select[name="billing_state"], select[name="shipping_state"]', function () {
