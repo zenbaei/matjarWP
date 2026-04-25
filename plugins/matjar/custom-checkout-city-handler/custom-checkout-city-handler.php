@@ -48,14 +48,25 @@ class Matjar_Checkout_Customizations
         $isEgypt = $this->is_egypt_selected() ? true : false;
 
         foreach ($elements as $el) {
-            if (isset($fields['billing']['billing_' . $el])) {
-                $fields['billing']['billing_' . $el]['class'][] =  $isEgypt ? 'hidden' : '';
-                $fields['billing']['billing_' . $el]['required'] =  $isEgypt ? false : true;
-            }
 
-            if (isset($fields['shipping']['shipping_' . $el])) {
-                $fields['shipping']['shipping_' . $el]['class'][] =  $isEgypt ? 'hidden' : '';
-                $fields['shipping']['shipping_' . $el]['required'] =  $isEgypt ? false : true;
+            $billingClass = $fields['billing']['billing_' . $el]['class'] ?? [];
+            $shippingClass = $fields['shipping']['shipping_' . $el]['class'] ?? [];
+
+            if ($isEgypt) {
+                if (!in_array('hidden', $billingClass, true)) {
+                    $billingClass[] = 'hidden';
+                }
+                if (!in_array('hidden', $shippingClass, true)) {
+                    $shippingClass[] = 'hidden';
+                }
+                $fields['billing']['billing_' . $el]['required'] = false;
+                $fields['shipping']['shipping_' . $el]['required'] = false;
+            } else {
+                $billingClass = array_values(array_diff($billingClass, ['hidden']));
+                $fields['billing']['billing_' . $el]['required'] = true;
+
+                $shippingClass = array_values(array_diff($shippingClass, ['hidden']));
+                $fields['shipping']['shipping_' . $el]['required'] = true;
             }
         }
 
@@ -65,16 +76,21 @@ class Matjar_Checkout_Customizations
     }
 
     /**
-     * Show state field as area for Egypt only.
-     * 
      * It only shows on billing because shipping doesn't have this field, so we don't need to check it there.
      */
     private function showAreaForEgyptOnly(&$fields, $isEgypt)
     {
-        if (isset($fields['billing']['billing_area'])) {
-            $fields['billing']['billing_area']['class'][] =  $isEgypt ? 'hidden' : '';
-            $fields['billing']['billing_area']['required'] =  $isEgypt ? false : true;
+        $class = $fields['billing']['billing_area']['class'] ?? [];
+
+        if (!$isEgypt) {
+            if (!in_array('hidden', $class, true)) {
+                $class[] = 'hidden';
+            }
+        } else {
+            $class = array_values(array_diff($class, ['hidden']));
         }
+
+        $fields['billing']['billing_area']['class'] = $class;
     }
 
     /**
