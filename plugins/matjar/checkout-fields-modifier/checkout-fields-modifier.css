@@ -1,0 +1,11 @@
+/* Just is for preventing what is called flickering,
+ * Actually i don't see its effect, and adding !important overriding js show and hide and
+ * makes them always hidden.
+*/
+
+#billing_city_field,
+#billing_postcode_field,
+#shipping_city_field,
+#shipping_postcode_field {
+    display: none;
+}

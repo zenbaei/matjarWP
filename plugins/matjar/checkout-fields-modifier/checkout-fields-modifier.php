@@ -5,7 +5,7 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class Matjar_Checkout_Customizations
+ * Class Checkout_Fields_Modifier
  *
  * Handles WooCommerce checkout customization for Egypt:
  * - Hides city field
@@ -14,14 +14,14 @@ if (!defined('ABSPATH')) {
  * - Updates labels via JS
  * - Triggers checkout refresh on state change
  */
-class Matjar_Checkout_Customizations
+class Checkout_Fields_Modifier
 {
     /**
      * Initialize hooks.
      */
     public function __construct()
     {
-        add_filter('woocommerce_checkout_fields', [$this, 'toggleFieldsVisibility'], 999);
+        add_filter('woocommerce_checkout_fields', [$this, 'toggleFieldsRequired'], 999);
         add_action('woocommerce_checkout_process', [$this, 'sync_city_with_state']);
         add_action('wp_enqueue_scripts', [$this, 'enqueue_scripts'], 20);
     }
@@ -42,35 +42,27 @@ class Matjar_Checkout_Customizations
      * Toggle visibility and required status of city and postcode fields based on country selection.
      * This also must be implemented in JS to handle city change.   
      */
-    public function toggleFieldsVisibility($fields)
+    public function toggleFieldsRequired($fields)
     {
         $elements = ['city', 'postcode'];
-        $isEgypt = $this->is_egypt_selected() ? true : false;
+        $isEgypt = $this->is_egypt_selected();
+        $isRequired = !$isEgypt;
 
         foreach ($elements as $el) {
 
-            $billingClass = $fields['billing']['billing_' . $el]['class'] ?? [];
-            $shippingClass = $fields['shipping']['shipping_' . $el]['class'] ?? [];
+            foreach (['billing', 'shipping'] as $type) {
 
-            if ($isEgypt) {
-                if (!in_array('hidden', $billingClass, true)) {
-                    $billingClass[] = 'hidden';
-                }
-                if (!in_array('hidden', $shippingClass, true)) {
-                    $shippingClass[] = 'hidden';
-                }
-                $fields['billing']['billing_' . $el]['required'] = false;
-                $fields['shipping']['shipping_' . $el]['required'] = false;
-            } else {
-                $billingClass = array_values(array_diff($billingClass, ['hidden']));
-                $fields['billing']['billing_' . $el]['required'] = true;
+                $key = $type . '_' . $el;
 
-                $shippingClass = array_values(array_diff($shippingClass, ['hidden']));
-                $fields['shipping']['shipping_' . $el]['required'] = true;
+                if (!isset($fields[$type][$key])) {
+                    continue;
+                }
+
+                $fields[$type][$key]['required'] = $isRequired;
             }
         }
 
-        $this->showAreaForEgyptOnly($fields, $isEgypt);
+        $fields = $this->toggleAreaRequired($fields, $isEgypt);
 
         return $fields;
     }
@@ -78,19 +70,15 @@ class Matjar_Checkout_Customizations
     /**
      * It only shows on billing because shipping doesn't have this field, so we don't need to check it there.
      */
-    private function showAreaForEgyptOnly(&$fields, $isEgypt)
+    private function toggleAreaRequired($fields, $isEgypt)
     {
-        $class = $fields['billing']['billing_area']['class'] ?? [];
+        $key = 'billing_area';
 
-        if (!$isEgypt) {
-            if (!in_array('hidden', $class, true)) {
-                $class[] = 'hidden';
-            }
-        } else {
-            $class = array_values(array_diff($class, ['hidden']));
+        if (isset($fields['billing'][$key])) {
+            $fields['billing'][$key]['required'] = $isEgypt;
         }
 
-        $fields['billing']['billing_area']['class'] = $class;
+        return $fields;
     }
 
     /**
@@ -125,15 +113,25 @@ class Matjar_Checkout_Customizations
     {
         if (!is_checkout()) return;
 
+        $base_url  = plugin_dir_url(__FILE__);
+        $base_path = plugin_dir_path(__FILE__);
+
         wp_enqueue_script(
-            'custom-checkout-handler',
-            plugin_dir_url(__FILE__) . 'custom-checkout-handler.js',
+            'checkout-fields-modifier-js',
+            $base_url . 'checkout-fields-modifier.js',
             ['jquery'],
-            filemtime(plugin_dir_path(__FILE__) . 'custom-checkout-handler.js'), // 🔥
+            filemtime($base_path . 'checkout-fields-modifier.js'),
             true
+        );
+
+        wp_enqueue_style(
+            'checkout-fields-modifier-css',
+            $base_url . 'checkout-fields-modifier.css',
+            [],
+            filemtime($base_path . 'checkout-fields-modifier.css')
         );
     }
 }
 
 // Initialize the class
-new Matjar_Checkout_Customizations();
+new Checkout_Fields_Modifier();

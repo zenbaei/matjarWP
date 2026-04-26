@@ -29,44 +29,29 @@ jQuery(function ($) {
 
     function toggleFieldsVisibility() {
 
-        const fields = [
-            'city',
-            'postcode'
-        ];
+        const egypt = isEgypt();
 
-        fields.forEach(el => {
-            toggleField(el);
+        ['city', 'postcode'].forEach(field => {
+            toggleField(field, egypt);
         });
 
-
-        showAreaForEgyptOnly();
-
+        toggleArea(egypt);
     }
 
-    function toggleField(field) {
-        if (isEgypt()) {
-            $(`#billing_${field}_field`).hide();
-            $(`#shipping_${field}_field`).hide();
-        } else {
-            $(`#billing_${field}_field`).show();
-            $(`#shipping_${field}_field`).show();
-        }
+    function toggleField(field, egypt) {
+        $(`#billing_${field}_field`).toggle(!egypt);
+        $(`#shipping_${field}_field`).toggle(!egypt);
     }
 
-
-    function showAreaForEgyptOnly() {
-        // This field doesn't exist in Shipping, so we only toggle it in Billing
-        isEgypt() ?
-            $('#billing_area_field').show() : $('#billing_area_field').hide();
+    function toggleArea(egypt) {
+        // Billing only
+        $('#billing_area_field').toggle(egypt);
     }
-
 
     function init() {
+        // toggleFieldsVisibility();
         triggerCheckoutUpdateOnStateChange();
-
         triggerFieldsOrderingOnUpdatedCheckout();
-
-        //  triggerFieldsVisibilityOnCountryChange();
     }
 
     // Initial run

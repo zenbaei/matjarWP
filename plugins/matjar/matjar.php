@@ -33,7 +33,7 @@ $modules = [
     'fields/fields-loader.php',
     'product-stock-enforcer/product-stock-enforcer.php',
     'product-weight-enforcer/product-weight-enforcer.php',
-    'custom-checkout-city-handler/custom-checkout-city-handler.php',
+    'checkout-fields-modifier/checkout-fields-modifier.php',
     'recently-viewed-cleaner/recently-viewed-cleaner.php'
 ];
 
