@@ -30,7 +30,7 @@ $modules = [
     'admin-image-zoom/admin-image-zoom.php',
     'writer-taxonomy/writer-taxonomy.php',
     'publisher-taxonomy/publisher-taxonomy.php',
-    'product-fields/fields-loader.php',
+    'product-custom-fields/fields-loader.php',
     'product-stock-enforcer/product-stock-enforcer.php',
     'product-weight-enforcer/product-weight-enforcer.php',
     'checkout-fields-modifier/checkout-fields-modifier.php',

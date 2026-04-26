@@ -1,6 +1,6 @@
 <?php
 
-namespace Matjar\Fields;
+namespace Matjar\Product_Custom_Fields;
 
 
 if (!defined('ABSPATH')) exit;
@@ -39,6 +39,12 @@ class UI
 
             '_book_edition' => [
                 'label' => 'Edition',
+                'type'  => 'number',
+                'default' => 1,
+            ],
+
+            '_book_original_price' => [
+                'label' => 'Original Price',
                 'type'  => 'number',
                 'default' => 1,
             ],

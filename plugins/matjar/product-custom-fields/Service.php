@@ -1,6 +1,6 @@
 <?php
 
-namespace Matjar\Fields;
+namespace Matjar\Product_Custom_Fields;
 
 if (!defined('ABSPATH')) exit;
 
