@@ -26,11 +26,11 @@ if (!defined('MATJAR_VERSION')) {
 }
 
 $modules = [
-    'media-folders/media-folders.php',
+    'media-folders-taxonomy/media-folders-taxonomy.php',
     'admin-image-zoom/admin-image-zoom.php',
     'writer-taxonomy/writer-taxonomy.php',
     'publisher-taxonomy/publisher-taxonomy.php',
-    'fields/fields-loader.php',
+    'product-fields/fields-loader.php',
     'product-stock-enforcer/product-stock-enforcer.php',
     'product-weight-enforcer/product-weight-enforcer.php',
     'checkout-fields-modifier/checkout-fields-modifier.php',
