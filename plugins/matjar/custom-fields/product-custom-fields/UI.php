@@ -235,7 +235,7 @@ class UI
 
         wp_enqueue_script(
             'select2-ajax',
-            MATJAR_URL . 'assets/js/select2-ajax.js',
+            MATJAR_URL . 'select2-ajax.js',
             ['jquery', 'selectWoo'],
             MATJAR_VERSION,
             true

@@ -5,6 +5,9 @@ themes/*
 # ✅ Allow matjar plugin
 !plugins/matjar/
 !plugins/matjar/**
+!plugins/bosta-woocommerce/
+plugins/bosta-woocommerce/*
+!plugins/bosta-woocommerce/bosta-woocommerce.php
 
 # ✅ Allow xstore child theme
 themes/xstore/*          # re-ignore everything inside xstore

@@ -26,15 +26,15 @@ if (!defined('MATJAR_VERSION')) {
 }
 
 $modules = [
-    'media-folders-taxonomy/media-folders-taxonomy.php',
-    'admin-image-zoom/admin-image-zoom.php',
-    'writer-taxonomy/writer-taxonomy.php',
-    'publisher-taxonomy/publisher-taxonomy.php',
-    'product-custom-fields/fields-loader.php',
-    'product-stock-enforcer/product-stock-enforcer.php',
-    'product-weight-enforcer/product-weight-enforcer.php',
-    'checkout-fields-modifier/checkout-fields-modifier.php',
-    'recently-viewed-cleaner/recently-viewed-cleaner.php'
+    'taxonomies/media-folders-taxonomy/media-folders-taxonomy.php',
+    'taxonomies/writer-taxonomy/writer-taxonomy.php',
+    'taxonomies/publisher-taxonomy/publisher-taxonomy.php',
+    'custom-fields/product-custom-fields/fields-loader.php',
+    'admin/admin-image-zoom/admin-image-zoom.php',
+    'admin/product-stock-enforcer/product-stock-enforcer.php',
+    'admin/product-weight-enforcer/product-weight-enforcer.php',
+    'app/checkout-fields-modifier/checkout-fields-modifier.php',
+    'app/recently-viewed-widget/recently-viewed-widget.php',
 ];
 
 foreach ($modules as $module) {
