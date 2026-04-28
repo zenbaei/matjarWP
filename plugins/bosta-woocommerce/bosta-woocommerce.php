@@ -330,11 +330,6 @@ function bosta_get_city_areas()
 			$city_code = $city['cityCode'];
 			$city_areas = '';
 			foreach ($city['districts'] as $district) {
-				// 🔥 ﻒﻠﺗﺭﺓ ﺢﺴﺑ ﺎﻠﺘﻐﻄﻳﺓ
-                if (empty($district['dropOffAvailability'])) {
-                	continue;
-                }
-
 				$zone_name = $is_arabic ? $district['zoneOtherName'] : $district['zoneName'];
 				$district_name = $is_arabic ? $district['districtOtherName'] : $district['districtName'];
 
@@ -756,14 +751,7 @@ function bosta_add_dynamic_area_dropdown_to_checkout($fields)
 		wc_enqueue_js("
     jQuery(document).ready(function($) {
         $(':input.wc-enhanced-select').filter(':not(.enhanced)').each(function() {
-            var select2_args = {
-                minimumResultsForSearch: 5,
-                language: {
-                    	noResults: function () {
-                    	return "ﻻ ﺕﻮﺟﺩ ﻦﺗﺎﺌﺟ";
-                    }
-                }
-            };
+            var select2_args = { minimumResultsForSearch: 5 };
             $(this).select2(select2_args).addClass('enhanced');
         });
 
