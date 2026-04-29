@@ -16,15 +16,11 @@ jQuery(function ($) {
         if (!country) return; // مهم جدًا
 
         if (country !== 'EG') {
-            $('.international-quote-row').show();
             $('.order-total').hide();
-            $('.woocommerce-shipping-totals.shipping').hide();
-            $('#payment').hide();
+            // $('.woocommerce-shipping-totals.shipping').hide();
         } else {
-            $('.international-quote-row').hide();
-            $('.woocommerce-shipping-totals.shipping').show();
+            //  $('.woocommerce-shipping-totals.shipping').show();
             $('.order-total').show();
-            $('#payment').show();
         }
     }
 
@@ -43,38 +39,5 @@ jQuery(function ($) {
         toggleQuoteUI();
     });
 
-
-    $(document).on('click', '#get-international-quote', function () {
-
-        let $btn = $(this);
-        let email = $('#billing_email').val();
-
-        if (!email) {
-            alert('من فضلك أدخل البريد الإلكتروني أولاً');
-            $('#billing_email').focus();
-            return;
-        }
-
-        // 🔥 منع الضغط المتكرر
-        $btn.prop('disabled', true);
-
-        $('#quote-result').html('جاري إرسال الطلب...');
-
-        $.post(intlShippingHandler.ajax_url, {
-            action: 'get_shipping_quote',
-            email: email,
-            nonce: intlShippingHandler.nonce
-        }, function (response) {
-
-            if (response.success) {
-                $('#quote-result').html(response.data.message);
-            } else {
-                $('#quote-result').html(response.data || 'حدث خطأ');
-                $btn.prop('disabled', false); // رجّع الزر لو فشل
-            }
-
-        });
-
-    });
 
 });

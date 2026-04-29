@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Plugin Name: Matjar - Product Stock Enforcer
  * Description: Ensures all WooCommerce products have stock management enabled, minimum stock of 1, and no backorders.
@@ -12,12 +13,14 @@ if (!defined('ABSPATH')) {
 
 if (!class_exists('Matjar_Product_Stock_Enforcer')) {
 
-    class Matjar_Product_Stock_Enforcer {
+    class Matjar_Product_Stock_Enforcer
+    {
 
         /**
          * Constructor
          */
-        public function __construct() {
+        public function __construct()
+        {
             add_action(
                 'woocommerce_admin_process_product_object',
                 [$this, 'enforce_product_stock_defaults']
@@ -29,7 +32,8 @@ if (!class_exists('Matjar_Product_Stock_Enforcer')) {
          *
          * @param WC_Product $product
          */
-        public function enforce_product_stock_defaults($product) {
+        public function enforce_product_stock_defaults($product)
+        {
 
             if (!$product || !is_a($product, 'WC_Product')) {
                 return;
@@ -39,6 +43,9 @@ if (!class_exists('Matjar_Product_Stock_Enforcer')) {
             if ($product->is_type('grouped') || $product->is_type('external')) {
                 return;
             }
+
+            if (!$product->is_in_stock())
+                return;
 
             // ✅ Always enable stock management
             $product->set_manage_stock(true);

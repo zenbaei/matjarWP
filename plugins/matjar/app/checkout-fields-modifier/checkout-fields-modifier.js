@@ -49,7 +49,6 @@ jQuery(function ($) {
     }
 
     function init() {
-        // toggleFieldsVisibility();
         triggerCheckoutUpdateOnStateChange();
         triggerFieldsOrderingOnUpdatedCheckout();
     }

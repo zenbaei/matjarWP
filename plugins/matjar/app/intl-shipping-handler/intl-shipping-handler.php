@@ -14,100 +14,79 @@ class Intl_Shipping_Handler
 
     public function __construct()
     {
-        add_action('woocommerce_review_order_after_order_total', [$this, 'render_quote_row']);
         add_action('wp_enqueue_scripts', [$this, 'enqueue_scripts']);
 
-        add_action('wp_ajax_get_shipping_quote', [$this, 'get_shipping_quote']);
-        add_action('wp_ajax_nopriv_get_shipping_quote', [$this, 'get_shipping_quote']);
+        add_filter('woocommerce_available_payment_gateways', [$this, 'baypass_payment_gateways']);
+        add_filter('woocommerce_no_available_payment_methods_message', [$this, 'replace_payment_message']);
+        add_filter('woocommerce_cart_needs_payment', [$this, 'skip_payment_validation']);
+        add_action('woocommerce_checkout_create_order', [$this, 'intl_order_status_as_pending']);
     }
 
-    /**
-     * 🟢 Render hidden row in checkout
-     */
-    public function render_quote_row()
+    public function baypass_payment_gateways($gateways)
     {
-        echo '
-        <tr class="international-quote-row" style="display:none;">
-            <th>الشحن الدولي</th>
-            <td>
-                <button type="button" id="get-international-quote" class="button alt">
-                    احصل على سعر للشحن
-                </button>
-                <div id="quote-result" style="margin-top:10px;"></div>
-            </td>
-        </tr>
-        ';
+        // Never touch admin
+        if (is_admin()) {
+            return $gateways;
+        }
+
+        // Get live checkout country (session-based)
+        $country = WC()->customer ? WC()->customer->get_billing_country() : '';
+
+        // Prevent weird behavior on first load
+        if (!$country) {
+            return $gateways;
+        }
+
+        // 🚀 Your logic
+        if ($country !== 'EG') {
+            return []; // hide all gateways
+        }
+
+        return $gateways;
     }
 
-    /**
-     * 🔴 AJAX handler
-     */
-    public function get_shipping_quote()
+    public function replace_payment_message($message)
     {
 
-        // ✅ Security check
-        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'intl_shipping_handler_js_nonce')) {
-            wp_send_json_error('Unauthorized');
+        $country = WC()->customer ? WC()->customer->get_billing_country() : '';
+
+        if ($country && $country !== 'EG') {
+            return 'سيتم حساب تكلفة الشحن الدولي واعلامكم عبر البريد الإلكتروني.'; // your custom message
         }
 
-        if (!WC()->cart) {
-            wp_send_json_error('Cart empty');
+        return $message;
+    }
+
+    public function skip_payment_validation($needs_payment)
+    {
+
+        if (is_admin() && !defined('DOING_AJAX')) {
+            return $needs_payment;
         }
 
-        $email = sanitize_email($_POST['email']);
+        $country = WC()->customer ? WC()->customer->get_billing_country() : '';
 
-        if (!$email) {
-            wp_send_json_error('Invalid email');
+        // If no country yet → don't interfere
+        if (!$country) {
+            return $needs_payment;
         }
 
-        $customer = WC()->customer;
-
-        // 🧠 إنشاء order حقيقي
-        $order = wc_create_order();
-
-        foreach (WC()->cart->get_cart() as $item) {
-            $order->add_product($item['data'], $item['quantity']);
+        // 🌍 Non-Egypt → skip payment
+        if ($country !== 'EG') {
+            return false;
         }
 
-        // 🧾 بيانات العميل
-        $order->set_billing_email($email);
-        $order->set_billing_country($customer->get_billing_country());
-        $order->set_shipping_country($customer->get_shipping_country());
+        // 🇪🇬 Egypt → normal payment
+        return true;
+    }
 
-        // 🏷️ حالة خاصة (مش مدفوع)
-        $order->set_status('pending', 'Shipping quote request');
+    public function intl_order_status_as_pending($order)
+    {
+        $country = WC()->customer ? WC()->customer->get_billing_country() : '';
 
-        $order->calculate_totals();
-        $order->save();
-
-        $order_id = $order->get_id();
-
-        // 📦 حساب الوزن
-        $weight = 0;
-        foreach (WC()->cart->get_cart() as $item) {
-            $weight += (float)$item['data']->get_weight() * $item['quantity'];
+        if ($country && $country !== 'EG') {
+            $order->set_status('pending');
         }
-
-        // 📨 إيميل ليك
-        $admin_email = get_option('admin_email');
-
-        $subject = 'طلب شحن دولي #' . $order_id;
-
-        $message = "
-        Order ID: {$order_id}
-        Customer Email: {$email}
-        Country: {$customer->get_shipping_country()}
-        Weight: {$weight} KG
-    ";
-
-        wp_mail($admin_email, $subject, $message);
-
-        // 📨 إيميل للعميل
-        wp_mail($email, 'تم استلام طلب الشحن', "طلبك رقم {$order_id} تم استلامه، وسيتم التواصل معك قريبًا.");
-
-        wp_send_json_success([
-            'message' => "تم إرسال الطلب بنجاح (رقم الطلب: #{$order_id})"
-        ]);
     }
 
     /**
@@ -131,20 +110,6 @@ class Intl_Shipping_Handler
             'ajax_url' => admin_url('admin-ajax.php'),
             'nonce'    => wp_create_nonce('intl_shipping_handler_js_nonce')
         ]);
-    }
-
-    /**
-     * 🌐 Aramex API (placeholder)
-     */
-    private function get_aramex_rate($weight, $country)
-    {
-
-        // مؤقت (test)
-        if ($weight <= 1) return 15;
-        if ($weight <= 5) return 25;
-        return 40;
-
-        // هنا تحط API الحقيقي
     }
 }
 
