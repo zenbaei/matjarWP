@@ -16,18 +16,46 @@ class Intl_Shipping_Handler
     {
         add_action('wp_enqueue_scripts', [$this, 'enqueue_scripts']);
 
-        add_filter('woocommerce_available_payment_gateways', [$this, 'baypass_payment_gateways']);
+        add_filter('woocommerce_available_payment_gateways', [$this, 'force_cod_payment_for_intl']);
         add_filter('woocommerce_no_available_payment_methods_message', [$this, 'replace_payment_message']);
-        add_filter('woocommerce_cart_needs_payment', [$this, 'skip_payment_validation']);
-        add_action('woocommerce_checkout_create_order', [$this, 'intl_order_status_as_pending']);
+        //  add_filter('woocommerce_cart_needs_payment', [$this, 'skip_payment_validation']);
+        //  add_action('woocommerce_checkout_create_order', [$this, 'intl_order_status_as_pending'], 999);
+        // add_action('woocommerce_checkout_order_processed', [$this, 'set_order_status_pending']);
+        // add_filter('woocommerce_payment_complete_order_status', [$this, 'override_order_status_on_payment_complete']);
     }
 
-    public function baypass_payment_gateways($gateways)
+    public function override_order_status_on_payment_complete($status, $order_id)
     {
+        $order = wc_get_order($order_id);
+        if (!$order) return $status;
+
+        $country = $order->get_billing_country();
+
+        if ($country && $country !== 'EG') {
+            return 'pending'; // Force pending on payment complete for intl orders
+        }
+
+        return $status; // normal flow for EG orders
+    }
+
+    public function force_cod_payment_for_intl($gateways)
+    {
+
         // Never touch admin
         if (is_admin()) {
             return $gateways;
         }
+
+
+        if (is_wc_endpoint_url('order-pay')) {
+            $order_id = absint(get_query_var('order-pay'));
+            $order = wc_get_order($order_id);
+            if (isset($gateways['cod'])) {
+                unset($gateways['cod']);
+            }
+            return $gateways;
+        }
+
 
         // Get live checkout country (session-based)
         $country = WC()->customer ? WC()->customer->get_billing_country() : '';
@@ -37,10 +65,20 @@ class Intl_Shipping_Handler
             return $gateways;
         }
 
-        // 🚀 Your logic
-        if ($country !== 'EG') {
-            return []; // hide all gateways
+        // Egypt → remove COD
+        if ($country === 'EG') {
+            if (isset($gateways['cod'])) {
+                unset($gateways['cod']);
+            }
+            return $gateways;
         }
+
+        // Other countries → only COD
+        if (isset($gateways['cod'])) {
+            return ['cod' => $gateways['cod']];
+        }
+
+        error_log("COD not available for country $country");
 
         return $gateways;
     }
@@ -86,6 +124,22 @@ class Intl_Shipping_Handler
 
         if ($country && $country !== 'EG') {
             $order->set_status('pending');
+        }
+    }
+
+    public function set_order_status_pending($order_id)
+    {
+
+        $order = wc_get_order($order_id);
+        if (!$order) return;
+
+        $country = $order->get_billing_country();
+
+        if ($country && $country !== 'EG') {
+
+            // Force pending AFTER Woo sets status
+            $order->set_status('pending', 'Forced pending for international order');
+            $order->save();
         }
     }
 
