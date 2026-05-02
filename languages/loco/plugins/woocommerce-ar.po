@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the Plugins - WooCommerce - Stable (latest release) package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-04-27 15:40+0000\n"
+"PO-Revision-Date: 2026-05-02 07:14+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-27 15:39+0000\n"
 "Last-Translator: islam zenbaei\n"
-"X-Loco-Version: 2.8.3; wp-6.9.4; php-8.3.30"
+"X-Loco-Version: 2.8.4; wp-6.9.4; php-8.3.30"
 
 #. translators: no need to translate it. It's a link.
 #: src/Admin/Features/LaunchYourStore.php:198
@@ -41152,7 +41152,10 @@ msgstr "غير مصرح"
 #: src/Checkout/Helpers/ReserveStock.php:238
 #, php-format
 msgid "Not enough units of %s are available in stock to fulfil this order."
-msgstr "لا يتوافر عدد كافٍ من وحدات %s في المخزون لتنفيذ هذا الطلب."
+msgstr ""
+"لا يتوافر عدد كافٍ من وحدات '%s' في المخزون لتنفيذ هذا الطلب. عادة ما يكون "
+"الكتاب ضمن طلب \"منتظر الدفع\" وسيتم اعادته للمخزون في حالة عدم الدفع خلال "
+"24 ساعة."
 
 #: assets/client/admin/chunks/5753.js:1
 msgid "Not now"
@@ -57947,7 +57950,8 @@ msgid ""
 "available). We apologize for any inconvenience caused."
 msgstr ""
 "عذرًا، ليس لدينا \"%1$s\" كافٍ في المخزون لإنجاز طلبك (%2$s متوفر). نعتذر عن "
-"أي إزعاج قد يسببه الأمر."
+"أي إزعاج قد يسببه الأمر. عادة ما يكون الكتاب ضمن طلب \"منتظر الدفع\" وسيتم "
+"اعادته للمخزون في حالة عدم الدفع خلال 24 ساعة."
 
 #. translators: %s country code.
 #: src/StoreApi/Utilities/OrderController.php:391
