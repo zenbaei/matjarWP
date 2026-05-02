@@ -17,9 +17,7 @@ jQuery(function ($) {
 
         if (country !== 'EG') {
             $('.order-total').hide();
-            // $('.woocommerce-shipping-totals.shipping').hide();
         } else {
-            //  $('.woocommerce-shipping-totals.shipping').show();
             $('.order-total').show();
         }
     }

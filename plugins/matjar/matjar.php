@@ -35,8 +35,8 @@ $modules = [
     'admin/product-weight-enforcer/product-weight-enforcer.php',
     'app/checkout-fields-modifier/checkout-fields-modifier.php',
     'app/recently-viewed-widget/recently-viewed-widget.php',
-    // 'app/intl-shipping-handler/intl-shipping-handler.php',
-    'app/intl-shipping-gateway/intl-shipping-gateway.php',
+    'app/custom-payment-gateway/loader.php',
+    'app/custom-intl-checkout-handler/custom-intl-checkout-handler.php',
 ];
 
 foreach ($modules as $module) {

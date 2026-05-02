@@ -44,6 +44,8 @@ class Checkout_Fields_Modifier
      */
     public function toggleFieldsRequired($fields)
     {
+        $fields['billing']['billing_address_2']['label_class'] = []; // نشيل screen-reader-text
+
         $elements = ['city', 'postcode'];
         $isEgypt = $this->is_egypt_selected();
         $isRequired = !$isEgypt;
