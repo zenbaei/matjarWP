@@ -37,6 +37,26 @@ class WC_Gateway_Intl_Shipping extends WC_Payment_Gateway
     }
 
     /**
+     * Register all hooks related to enforcing this gateway
+     */
+    private function init_hooks()
+    {
+
+        // حفظ إعدادات الأدمن
+        add_action(
+            'woocommerce_update_options_payment_gateways_' . $this->id,
+            [$this, 'process_admin_options']
+        );
+
+
+        // Optional: customize thank you page message
+        add_action(
+            'woocommerce_thankyou_' . $this->id,
+            [$this, 'thankyou_message']
+        );
+    }
+
+    /**
      * Define base properties (static config)
      */
     private function setup_properties()
@@ -63,27 +83,6 @@ class WC_Gateway_Intl_Shipping extends WC_Payment_Gateway
         $this->enabled     = $this->get_option('enabled');
         $this->title       = $this->get_option('title');
         $this->description = $this->get_option('description');
-    }
-
-
-    /**
-     * Register all hooks related to enforcing this gateway
-     */
-    private function init_hooks()
-    {
-
-        // حفظ إعدادات الأدمن
-        add_action(
-            'woocommerce_update_options_payment_gateways_' . $this->id,
-            [$this, 'process_admin_options']
-        );
-
-
-        // Optional: customize thank you page message
-        add_action(
-            'woocommerce_thankyou_' . $this->id,
-            [$this, 'thankyou_message']
-        );
     }
 
 
@@ -129,7 +128,7 @@ class WC_Gateway_Intl_Shipping extends WC_Payment_Gateway
      */
     public function process_payment($order_id)
     {
-
+        error_log("Processing payment for order: " . $order_id);
         $order = wc_get_order($order_id);
 
         // Set status

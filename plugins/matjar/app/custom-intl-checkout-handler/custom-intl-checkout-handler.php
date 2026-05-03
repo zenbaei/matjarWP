@@ -53,8 +53,6 @@ class Custom_Intl_Checkout_Handler
      */
     public function filter_gateways($gateways)
     {
-        error_log("Filtering gateways...");
-
         if (is_admin()) return $gateways;
 
         if (is_wc_endpoint_url('order-pay')) {
@@ -67,10 +65,6 @@ class Custom_Intl_Checkout_Handler
         $country = $this->get_customer_country();
 
         if (!$country) return $gateways;
-
-        foreach ($gateways as $gateway) {
-            error_log("ID: " . $gateway->id . " | Title: " . $gateway->title);
-        }
 
         // Egypt → hide
         if ($country === 'EG') {
@@ -135,7 +129,6 @@ class Custom_Intl_Checkout_Handler
      */
     public function enforce_gateway_on_order($order, $data)
     {
-
         $country = $this->get_customer_country();
 
         if ($country && $country !== 'EG') {
@@ -167,3 +160,30 @@ class Custom_Intl_Checkout_Handler
 }
 
 new Custom_Intl_Checkout_Handler();
+
+
+/*
+    Debug hooks - to be removed later
+*/
+add_action('woocommerce_checkout_order_processed', function ($order_id) {
+    error_log('ORDER CREATED: ' . $order_id);
+});
+
+add_action('woocommerce_before_checkout_process', function () {
+    error_log('CHECKOUT PROCESS STARTED');
+});
+
+
+add_action('woocommerce_after_checkout_validation', function ($data, $errors) {
+    if (!empty($errors->get_error_codes())) {
+        // نرمي exception يوقف creation
+        throw new Exception('Checkout validation failed.');
+    }
+}, 9999, 2);
+
+add_action('woocommerce_new_order', function ($order_id) {
+    error_log('NEW ORDER: ' . $order_id);
+    error_log('REQUEST URI: ' . $_SERVER['REQUEST_URI']);
+    error_log('DOING AJAX: ' . (defined('DOING_AJAX') ? 'YES' : 'NO'));
+    error_log('POST: ' . print_r($_POST, true));
+});
