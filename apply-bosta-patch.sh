@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PATCH_FILE="patches/bosta-area-filter.patch"
+PATCH_FILE="patches/district-filter-select2-translate.patch"
 TARGET_FILE="plugins/bosta-woocommerce/bosta-woocommerce.php"
 
 echo "🔧 Applying Bosta patch..."
