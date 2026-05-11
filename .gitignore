@@ -1,6 +1,7 @@
 # Ignore all plugins and themes
 plugins/*
 themes/*
+updraft/
 
 # ✅ Allow matjar plugin
 !plugins/matjar/

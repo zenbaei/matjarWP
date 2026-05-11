@@ -33,8 +33,8 @@ $modules = [
     'admin/admin-image-zoom/admin-image-zoom.php',
     'admin/product-stock-enforcer/product-stock-enforcer.php',
     'admin/product-weight-enforcer/product-weight-enforcer.php',
-    'app/checkout-fields-modifier/checkout-fields-modifier.php',
     'app/recently-viewed-widget/recently-viewed-widget.php',
+    'app/checkout-fields-modifier/checkout-fields-modifier.php',
     'app/custom-payment-gateway/loader.php',
     'app/custom-intl-checkout-handler/custom-intl-checkout-handler.php',
 ];

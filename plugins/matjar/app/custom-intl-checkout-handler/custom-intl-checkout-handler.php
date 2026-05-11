@@ -164,7 +164,7 @@ new Custom_Intl_Checkout_Handler();
 
 /*
     Debug hooks - to be removed later
-*/
+
 add_action('woocommerce_checkout_order_processed', function ($order_id) {
     error_log('ORDER CREATED: ' . $order_id);
 });
@@ -175,9 +175,10 @@ add_action('woocommerce_before_checkout_process', function () {
 
 
 add_action('woocommerce_after_checkout_validation', function ($data, $errors) {
+    error_log("CHECKOUT VALIDATION COMPLETED");
     if (!empty($errors->get_error_codes())) {
         // نرمي exception يوقف creation
-        throw new Exception('Checkout validation failed.');
+        // throw new Exception('Checkout validation failed.');
     }
 }, 9999, 2);
 
@@ -187,3 +188,4 @@ add_action('woocommerce_new_order', function ($order_id) {
     error_log('DOING AJAX: ' . (defined('DOING_AJAX') ? 'YES' : 'NO'));
     error_log('POST: ' . print_r($_POST, true));
 });
+*/
