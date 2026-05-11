@@ -5,7 +5,7 @@
  * Description: WooCommerce integration for Bosta eCommerce
  * Author: Bosta
  * Author URI: https://www.bosta.co/
- * Version: 4.5.6
+ * Version: 4.5.7
  * Requires at least: 5.0
  * php version 7.0
  * Tested up to: 6.9
@@ -18,7 +18,7 @@
 
 // Define plugin file constant
 if (!defined('BOSTA_PLUGIN_FILE')) {
-	define('BOSTA_PLUGIN_FILE', __FILE__);
+    define('BOSTA_PLUGIN_FILE', __FILE__);
 }
 
 // Include webhook loader
@@ -53,21 +53,21 @@ require_once plugin_dir_path(__FILE__) . 'includes/class-bosta-product-info.php'
 
 
 // Initialize webhook system after WordPress is loaded
-add_action('init', function () {
-	Bosta_Webhook_Loader::init();
-	Bosta_Payment_Method_Handler::init();
+add_action('init', function() {
+    Bosta_Webhook_Loader::init();
+    Bosta_Payment_Method_Handler::init();
 });
 
 // Initialize fulfillment functionality
-add_action('init', function () {
-	Bosta_Fulfillment_Cache::init();
-	Bosta_Fulfillment::init();
-	Bosta_Fulfillment_UI::init();
-	Bosta_Consignee_Ranking::init();
-	Bosta_Product_Sync::init();
-
-	// Handle form submissions for custom actions
-	bosta_handle_form_submissions();
+add_action('init', function() {
+    Bosta_Fulfillment_Cache::init();
+    Bosta_Fulfillment::init();
+    Bosta_Fulfillment_UI::init();
+    Bosta_Consignee_Ranking::init();
+    Bosta_Product_Sync::init();
+    
+    // Handle form submissions for custom actions
+    bosta_handle_form_submissions();
 });
 
 
@@ -89,44 +89,44 @@ add_action('admin_print_styles', 'bosta_stylesheet');
 function bosta_stylesheet()
 {
 	$main_css_file = plugin_dir_path(__FILE__) . 'Css/main.css';
-	$pickups_css_file = plugin_dir_path(__FILE__) . 'components/pickups/pickups.css';
-	$flexship_css_file = plugin_dir_path(__FILE__) . 'components/settings/flexship/flexship.css';
-	$fulfillment_css_file = plugin_dir_path(__FILE__) . 'Css/fulfillment.css';
+    $pickups_css_file = plugin_dir_path(__FILE__) . 'components/pickups/pickups.css';
+    $flexship_css_file = plugin_dir_path(__FILE__) . 'components/settings/flexship/flexship.css';
+    $fulfillment_css_file = plugin_dir_path(__FILE__) . 'Css/fulfillment.css';
 
 	$main_css_version = filemtime($main_css_file);
-	$pickups_css_version = filemtime($pickups_css_file);
-	$flexship_css_version = filemtime($flexship_css_file);
-	$fulfillment_css_version = filemtime($fulfillment_css_file);
+    $pickups_css_version = filemtime($pickups_css_file);
+    $flexship_css_version = filemtime($flexship_css_file);
+    $fulfillment_css_version = filemtime($fulfillment_css_file);
 
 	wp_enqueue_style(
-		'myCSS',
-		plugins_url('/Css/main.css', __FILE__),
-		array(),
-		$main_css_version
-	);
-	wp_enqueue_style(
-		'pickupsCSS',
-		plugins_url('components/pickups/pickups.css', __FILE__),
-		array(),
-		$pickups_css_version
-	);
-	wp_enqueue_style(
-		'flexshipCSS',
-		plugins_url('components/settings/flexship/flexship.css', __FILE__),
-		array(),
-		$flexship_css_version
-	);
-	wp_enqueue_style(
-		'fulfillmentCSS',
-		plugins_url('Css/fulfillment.css', __FILE__),
-		array(),
-		$fulfillment_css_version
-	);
+        'myCSS', 
+        plugins_url('/Css/main.css', __FILE__), 
+        array(), 
+        $main_css_version
+    );
+    wp_enqueue_style(
+        'pickupsCSS', 
+        plugins_url('components/pickups/pickups.css', __FILE__), 
+        array(), 
+        $pickups_css_version
+    );
+    wp_enqueue_style(
+        'flexshipCSS', 
+        plugins_url('components/settings/flexship/flexship.css', __FILE__), 
+        array(), 
+        $flexship_css_version
+    );
+    wp_enqueue_style(
+        'fulfillmentCSS', 
+        plugins_url('Css/fulfillment.css', __FILE__), 
+        array(), 
+        $fulfillment_css_version
+    );
 }
 
 const BOSTA_ENV_URL_V0 = 'https://app.bosta.co/api/v0';
 const BOSTA_ENV_URL_V2 = 'https://app.bosta.co/api/v2';
-const PLUGIN_VERSION = '4.5.6';
+const PLUGIN_VERSION = '4.5.7';
 const bosta_cache_duration = 86400;
 const bosta_country_id_duration = 604800;
 const BOSTA_EGYPT_COUNTRY_ID = "60e4482c7cb7d4bc4849c4d5";
@@ -136,7 +136,7 @@ const FLEX_SHIPPING_DEFAULT_VALUE = 75;
 function bosta_send_api_request($method, $url, $APIKey = null, $body = null)
 {
 	$args = [
-		'timeout' => 30,
+		'timeout' => 300,
 		'method'  => strtoupper($method),
 		'headers' => [
 			'Content-Type'     => 'application/json',
@@ -146,8 +146,8 @@ function bosta_send_api_request($method, $url, $APIKey = null, $body = null)
 	];
 
 	if (!empty($APIKey)) {
-		$args['headers']['authorization'] = $APIKey;
-	}
+        $args['headers']['authorization'] = $APIKey;
+    }
 
 	if ($body) {
 		$args['body'] = json_encode($body);
@@ -173,7 +173,7 @@ function bosta_send_api_request($method, $url, $APIKey = null, $body = null)
 		} else {
 			$error_message = 'Unknown error';
 		}
-
+		
 		$error_messages = [
 			'success' => false,
 			'error'   => $error_message,
@@ -275,23 +275,23 @@ function bosta_get_current_language()
 			return 'ar';
 		}
 	}
-
+	
 	// Fall back to WordPress native locale
 	$locale = get_locale();
 	if (function_exists('get_user_locale') && is_admin()) {
 		$locale = get_user_locale();
 	}
-
+	
 	// Check if locale starts with 'en' (en, en_US, en_GB, etc.)
 	if (strpos($locale, 'en') === 0) {
 		return 'en';
 	}
-
+	
 	// Check if locale starts with 'ar' (ar, ar_EG, ar_SA, etc.)
 	if (strpos($locale, 'ar') === 0) {
 		return 'ar';
 	}
-
+	
 	// Default to Arabic for backward compatibility
 	return 'ar';
 }
@@ -309,7 +309,7 @@ function bosta_get_cities()
 			continue;
 		}
 		$city_code = $city['cityCode'];
-		$city_name = $is_arabic ? $city['cityOtherName'] : $city['cityName'];
+        $city_name = $is_arabic ? $city['cityOtherName'] : $city['cityName'];
 		$bosta_cities[$city_code] = $city_name;
 	}
 	return $bosta_cities;
@@ -318,7 +318,7 @@ function bosta_get_cities()
 function bosta_get_city_areas()
 {
 	$bosta_zoning = bosta_get_zoning();
-
+	
 	$current_language = bosta_get_current_language();
 	$is_arabic = $current_language === 'ar';
 
@@ -330,18 +330,14 @@ function bosta_get_city_areas()
 			$city_code = $city['cityCode'];
 			$city_areas = '';
 			foreach ($city['districts'] as $district) {
-				// filter not covered districts
-				if (empty($district['dropOffAvailability'])) {
-					continue;
-				}
 				$zone_name = $is_arabic ? $district['zoneOtherName'] : $district['zoneName'];
-				$district_name = $is_arabic ? $district['districtOtherName'] : $district['districtName'];
+                $district_name = $is_arabic ? $district['districtOtherName'] : $district['districtName'];
 
 				if ($zone_name === $district_name) {
-					$area = $district_name;
-				} else {
-					$area = $zone_name . ' - ' . $district_name;
-				}
+                    $area = $district_name;
+                } else {
+                    $area = $zone_name . ' - ' . $district_name;
+                }
 
 				$city_areas .= sprintf(
 					'<option value="%s">%s</option>',
@@ -430,7 +426,7 @@ function bosta_inventory_page()
 	// Handle form submissions
 	if (isset($_POST['bosta_inventory_action']) && wp_verify_nonce($_POST['bosta_inventory_nonce'], 'bosta_inventory_action')) {
 		$action = sanitize_text_field($_POST['bosta_inventory_action']);
-
+		
 		switch ($action) {
 			case 'sync_quantity':
 				// Handle quantity sync
@@ -453,11 +449,11 @@ function bosta_inventory_page()
 	$api_key = bosta_get_api_key();
 	$is_fulfillment_enabled = Bosta_Fulfillment_Cache::is_fulfillment_enabled();
 	$cache_info = Bosta_Fulfillment_Cache::get_cache_info();
-
-?>
+	
+	?>
 	<div class="wrap">
 		<h1><?php _e('Bosta Inventory Management', 'bosta'); ?></h1>
-
+		
 		<?php
 		// Display success message
 		$success_message = get_transient('bosta_inventory_success');
@@ -465,7 +461,7 @@ function bosta_inventory_page()
 			echo '<div class="notice notice-success is-dismissible"><p>' . esc_html($success_message) . '</p></div>';
 			delete_transient('bosta_inventory_success');
 		}
-
+		
 		// Display error message
 		$error_message = get_transient('bosta_inventory_error');
 		if ($error_message) {
@@ -473,7 +469,7 @@ function bosta_inventory_page()
 			delete_transient('bosta_inventory_error');
 		}
 		?>
-
+		
 		<?php if (empty($api_key)): ?>
 			<div class="notice notice-error">
 				<p><?php _e('API Key is required to manage inventory. Please configure your API key in the Bosta settings.', 'bosta'); ?></p>
@@ -482,21 +478,21 @@ function bosta_inventory_page()
 		<?php else: ?>
 			<div class="bosta-inventory-container">
 				<div class="bosta-inventory-section">
-
-
+					
+					
 					<?php if ($is_fulfillment_enabled): ?>
 						<div class="bosta-inventory-actions">
 							<h3><?php _e('Inventory Actions', 'bosta'); ?></h3>
-
+							
 							<form method="post" action="">
 								<?php wp_nonce_field('bosta_inventory_action', 'bosta_inventory_nonce'); ?>
-
+								
 								<div class="bosta-action-buttons">
 									<button type="submit" name="bosta_inventory_action" value="sync_quantity" class="button button-primary">
 										<?php _e('Sync Quantity', 'bosta'); ?>
 									</button>
 								</div>
-
+								
 								<div class="bosta-action-descriptions">
 									<p><strong><?php _e('Sync Quantity:', 'bosta'); ?></strong> <?php _e('Sync Quantity will force sync bosta quantity', 'bosta'); ?></p>
 								</div>
@@ -506,32 +502,32 @@ function bosta_inventory_page()
 						<div class="notice notice-warning">
 							<p><?php _e('Fulfillment features are not available for your account. Please contact Bosta support to enable fulfillment services.', 'bosta'); ?></p>
 						</div>
-
+						
 						<!-- Temporary fallback for testing -->
 						<div style="background: #fff3cd; padding: 10px; margin: 10px 0; border-radius: 4px; border: 1px solid #ffeaa7;">
 							<strong><?php _e('Testing Mode:', 'bosta'); ?></strong> <?php _e('Buttons shown for testing purposes', 'bosta'); ?>
-
+							
 							<form method="post" action="">
 								<?php wp_nonce_field('bosta_inventory_action', 'bosta_inventory_nonce'); ?>
-
+								
 								<div class="bosta-action-buttons">
 									<button type="submit" name="bosta_inventory_action" value="sync_quantity" class="button button-primary">
 										<?php _e('Sync Quantity', 'bosta'); ?>
 									</button>
 								</div>
-
+								
 								<div class="bosta-action-descriptions">
 									<p><strong><?php _e('Sync Quantity:', 'bosta'); ?></strong> <?php _e('Sync Quantity will force sync bosta quantity', 'bosta'); ?></p>
 								</div>
 							</form>
 						</div>
 					<?php endif; ?>
-
+					
 					<div class="bosta-cache-info">
 						<h3><?php _e('Cache Information', 'bosta'); ?></h3>
 						<p class="description">
-							<strong><?php _e('Cache Status:', 'bosta'); ?></strong>
-							<?php
+							<strong><?php _e('Cache Status:', 'bosta'); ?></strong> 
+							<?php 
 							if ($cache_info['transient_exists']) {
 								$expiry_time = $cache_info['transient_expiry'];
 								$time_remaining = $expiry_time - time();
@@ -552,91 +548,91 @@ function bosta_inventory_page()
 					</div>
 				</div>
 			</div>
-
+			
 			<style>
-				.bosta-inventory-container {
-					max-width: 800px;
-				}
-
-				.bosta-inventory-section {
-					background: #fff;
-					padding: 20px;
-					border: 1px solid #ccd0d4;
-					border-radius: 4px;
-					margin-top: 20px;
-				}
-
-				.bosta-action-buttons {
-					margin: 20px 0;
-				}
-
-				.bosta-action-buttons .button {
-					margin-right: 10px;
-				}
-
-				.bosta-action-descriptions {
-					margin-top: 15px;
-				}
-
-				.bosta-action-descriptions p {
-					margin-bottom: 10px;
-					color: #666;
-				}
-
-				.bosta-cache-info {
-					margin-top: 30px;
-					padding-top: 20px;
-					border-top: 1px solid #eee;
-				}
+			.bosta-inventory-container {
+				max-width: 800px;
+			}
+			
+			.bosta-inventory-section {
+				background: #fff;
+				padding: 20px;
+				border: 1px solid #ccd0d4;
+				border-radius: 4px;
+				margin-top: 20px;
+			}
+			
+			.bosta-action-buttons {
+				margin: 20px 0;
+			}
+			
+			.bosta-action-buttons .button {
+				margin-right: 10px;
+			}
+			
+			.bosta-action-descriptions {
+				margin-top: 15px;
+			}
+			
+			.bosta-action-descriptions p {
+				margin-bottom: 10px;
+				color: #666;
+			}
+			
+			.bosta-cache-info {
+				margin-top: 30px;
+				padding-top: 20px;
+				border-top: 1px solid #eee;
+			}
 			</style>
-
+			
 			<script type="text/javascript">
-				jQuery(document).ready(function($) {
-					// Refresh fulfillment status button
-					$('#refresh-fulfillment-status').on('click', function() {
-						var button = $(this);
-						var originalText = button.text();
-
-						button.prop('disabled', true).text('<?php _e('Refreshing...', 'bosta'); ?>');
-
-						$.ajax({
-							url: ajaxurl,
-							type: 'POST',
-							data: {
-								action: 'bosta_refresh_fulfillment_status',
-								nonce: '<?php echo wp_create_nonce('bosta_refresh_fulfillment_status'); ?>'
-							},
-							success: function(response) {
-								if (response.success) {
-									// Reload the page to reflect the new status
-									location.reload();
-								} else {
-									alert('<?php _e('Failed to refresh fulfillment status:', 'bosta'); ?> ' + response.data);
-								}
-							},
-							error: function() {
-								alert('<?php _e('An error occurred while refreshing fulfillment status.', 'bosta'); ?>');
-							},
-							complete: function() {
-								button.prop('disabled', false).text(originalText);
+			jQuery(document).ready(function($) {
+				// Refresh fulfillment status button
+				$('#refresh-fulfillment-status').on('click', function() {
+					var button = $(this);
+					var originalText = button.text();
+					
+					button.prop('disabled', true).text('<?php _e('Refreshing...', 'bosta'); ?>');
+					
+					$.ajax({
+						url: ajaxurl,
+						type: 'POST',
+						data: {
+							action: 'bosta_refresh_fulfillment_status',
+							nonce: '<?php echo wp_create_nonce('bosta_refresh_fulfillment_status'); ?>'
+						},
+						success: function(response) {
+							if (response.success) {
+								// Reload the page to reflect the new status
+								location.reload();
+							} else {
+								alert('<?php _e('Failed to refresh fulfillment status:', 'bosta'); ?> ' + response.data);
 							}
-						});
+						},
+						error: function() {
+							alert('<?php _e('An error occurred while refreshing fulfillment status.', 'bosta'); ?>');
+						},
+						complete: function() {
+							button.prop('disabled', false).text(originalText);
+						}
 					});
 				});
+			});
 			</script>
 		<?php endif; ?>
 	</div>
 	<?php
 }
 
-function bosta_get_order_by_metadata($meta_key, $meta_value)
-{
+function bosta_get_order_by_metadata($meta_key, $meta_value) 
+{	
 	try {
 		$page_num = isset($_GET['page_num']) ? $_GET['page_num'] : 1;
 		$query = new WC_Order_Query([
-			'limit' => 1,
-			'meta_key' => $meta_key,
-			'meta_value' => $meta_value,
+			'limit' => 1, 
+			'meta_key' => $meta_key, 
+			'meta_value' => $meta_value, 
 			'paged' => $page_num
 		]);
 		$orders = $query->get_orders();
@@ -644,10 +640,10 @@ function bosta_get_order_by_metadata($meta_key, $meta_value)
 	} catch (Exception $e) {
 		error_log('Bosta Plugin: Failed to get order by metadata. Meta Key: ' . $meta_key . ', Meta Value: ' . $meta_value . '. Error: ' . $e->getMessage());
 
-		$message = 'Bosta Plugin: Failed to get order by metadata. Meta Key: ' . esc_html($meta_key) . ', Meta Value: ' . esc_html($meta_value) . '. Error: ' . esc_html($e->getMessage());
+        $message = 'Bosta Plugin: Failed to get order by metadata. Meta Key: ' . esc_html($meta_key) . ', Meta Value: ' . esc_html($meta_value) . '. Error: ' . esc_html($e->getMessage());
 		bosta_set_transient('bosta_errors', "<p>{$message}</p>");
 		return null;
-	}
+    }
 }
 
 function bosta_update_order_metadata($order, $bosta_data)
@@ -668,55 +664,55 @@ function bosta_update_order_metadata($order, $bosta_data)
 				$order->update_meta_data($meta_key, $meta_value);
 			}
 		}
-
+		
 		// Check if this is a fulfillment order (FXF_SEND type)
 		if (isset($bosta_data['type']) && $bosta_data['type'] === 'FXF_SEND') {
 			$order->update_meta_data('bosta_is_fulfillment', true);
 		}
-
+		
 		// Clean up sync-related metadata when order is successfully synced
 		// This ensures orders that previously failed auto-sync are no longer filtered as failed
 		if (!empty($bosta_data['trackingNumber'])) {
 			$order->update_meta_data('bosta_sync_status', 'success');
 			$order->delete_meta_data('bosta_sync_error');
 		}
-
+		
 		$order->save();
 	} catch (Exception $e) {
-		$order_id = is_object($order) && method_exists($order, 'get_id') ? $order->get_id() : '';
-		error_log('Bosta Plugin: Failed to update order metadata. Order ID: ' . $order_id . '. Error: ' . $e->getMessage());
+        $order_id = is_object($order) && method_exists($order, 'get_id') ? $order->get_id() : '';
+        error_log('Bosta Plugin: Failed to update order metadata. Order ID: ' . $order_id . '. Error: ' . $e->getMessage());
 
-		$message = 'Bosta Plugin: Failed to update order metadata. Order ID: ' . esc_html($order_id) . '. Error: ' . esc_html($e->getMessage());
-		bosta_set_transient('bosta_errors', "<p>{$message}</p>");
-	}
+        $message = 'Bosta Plugin: Failed to update order metadata. Order ID: ' . esc_html($order_id) . '. Error: ' . esc_html($e->getMessage());
+        bosta_set_transient('bosta_errors', "<p>{$message}</p>");
+    }
 }
 
 function bosta_delete_order_metadata($order)
 {
-	try {
-		$meta_keys = [
-			'bosta_delivery_id',
-			'bosta_status',
-			'bosta_tracking_number',
-			'bosta_customer_phone',
-			'bosta_delivery_date',
-			'bosta_sync_status',
-			'bosta_sync_error',
-			'bosta_is_fulfillment'
-		];
+    try {
+        $meta_keys = [
+            'bosta_delivery_id',
+            'bosta_status',
+            'bosta_tracking_number',
+            'bosta_customer_phone',
+            'bosta_delivery_date',
+            'bosta_sync_status',
+            'bosta_sync_error',
+            'bosta_is_fulfillment'
+        ];
 
-		foreach ($meta_keys as $meta_key) {
-			$order->delete_meta_data($meta_key);
-		}
+        foreach ($meta_keys as $meta_key) {
+            $order->delete_meta_data($meta_key);
+        }
 
-		$order->save();
-	} catch (Exception $e) {
+        $order->save();
+    } catch (Exception $e) {
 		$order_id = is_object($order) && method_exists($order, 'get_id') ? $order->get_id() : '';
-		error_log('Bosta Plugin: Failed to delete order metadata. Order ID: ' . $order_id . '. Error: ' . $e->getMessage());
+        error_log('Bosta Plugin: Failed to delete order metadata. Order ID: ' . $order_id . '. Error: ' . $e->getMessage());
 
-		$message = 'Bosta Plugin: Failed to delete order metadata. Order ID: ' . esc_html($order_id) . '. Error: ' . esc_html($e->getMessage());
+        $message = 'Bosta Plugin: Failed to delete order metadata. Order ID: ' . esc_html($order_id) . '. Error: ' . esc_html($e->getMessage());
 		bosta_set_transient('bosta_errors', "<p>{$message}</p>");
-	}
+    }
 }
 //endregion
 
@@ -755,14 +751,7 @@ function bosta_add_dynamic_area_dropdown_to_checkout($fields)
 		wc_enqueue_js("
     jQuery(document).ready(function($) {
         $(':input.wc-enhanced-select').filter(':not(.enhanced)').each(function() {
-            var select2_args = {
-                minimumResultsForSearch: 5,
-                language: {
-                       noResults: function () {
-                       return 'لم يتم العثور على نتائج';
-                    }
-                }
-            };
+            var select2_args = { minimumResultsForSearch: 5 };
             $(this).select2(select2_args).addClass('enhanced');
         });
 
@@ -819,10 +808,10 @@ function bosta_enqueue_dynamic_area_dropdown_script()
 		$is_valid_screen = false;
 		$is_checkout = is_checkout();
 		$is_admin = is_admin();
-		if ($is_checkout) {
+		if($is_checkout) {
 			$is_valid_screen = true;
 		}
-		if ($is_admin) {
+		if($is_admin) {
 			$current_screen = get_current_screen();
 			if ($current_screen && isset($current_screen->post_type) && $current_screen->post_type === 'shop_order') {
 				$is_valid_screen = true;
@@ -1105,14 +1094,14 @@ function bosta_handle_bulk_action($redirect_to, $action, $order_ids, $fulfillmen
 			$fulfillment_type = isset($_GET['fulfillment_type']) ? sanitize_text_field($_GET['fulfillment_type']) : null;
 		}
 	}
+	
 
-
-
+	
 	$order_action = bosta_handle_order_action($action, $fulfillment_type);
 	if (!$order_action) {
 		return;
 	}
-
+	
 
 
 	$APIKey = bosta_get_api_key();
@@ -1128,7 +1117,7 @@ function bosta_handle_bulk_action($redirect_to, $action, $order_ids, $fulfillmen
 		'post__in' => $order_ids,
 	]);
 
-	if (!empty($orders)) {
+			if (!empty($orders)) {
 		switch ($order_action['actionType']) {
 			case 'sync_orders':
 				bosta_handle_send_orders_bulk_action([
@@ -1174,7 +1163,7 @@ function bosta_handle_order_action($action, $fulfillment_type = null)
 	if ($fulfillment_result !== null) {
 		return $fulfillment_result;
 	}
-
+	
 	// Handle other actions
 	switch ($action) {
 		case 'sync_cash_collection_orders':
@@ -1196,63 +1185,62 @@ function bosta_handle_order_action($action, $fulfillment_type = null)
 	}
 }
 
-function bosta_validate_order_fields($order, $order_action = null)
-{
-	$errors = [];
-	$msg = '';
+function bosta_validate_order_fields($order, $order_action = null) {
+    $errors = [];
+    $msg = ''; 
 
-	$fields = [
-		'First Name' => $order->get_billing_first_name() ?: $order->get_shipping_first_name(),
-		'Phone' => $order->get_billing_phone() ?: $order->get_shipping_phone(),
-		'Address line 1' => $order->get_billing_address_1() ?: $order->get_shipping_address_1(),
-		'State / County' => $order->get_billing_state() ?: $order->get_shipping_state(),
-	];
+    $fields = [
+        'First Name' => $order->get_billing_first_name() ?: $order->get_shipping_first_name(),
+        'Phone' => $order->get_billing_phone() ?: $order->get_shipping_phone(),
+        'Address line 1' => $order->get_billing_address_1() ?: $order->get_shipping_address_1(),
+        'State / County' => $order->get_billing_state() ?: $order->get_shipping_state(),
+    ];
 
-	foreach ($fields as $label => $value) {
-		if (empty($value)) {
-			$errors[] = '[' . $label . '] ' . 'is required.';
-		}
-	}
+    foreach ($fields as $label => $value) {
+        if (empty($value)) {
+            $errors[] = '[' . $label . '] ' . 'is required.';
+        }
+    }
 
-	$firstLine = $fields['Address line 1'];
-	if (!empty($firstLine) && strlen($firstLine) < 10) {
-		$errors[] = 'Error: character limit. The address entered is less than 10 characters. Please modify it and try again.';
-	}
+    $firstLine = $fields['Address line 1'];
+    if (!empty($firstLine) && strlen($firstLine) < 10) {
+        $errors[] = 'Error: character limit. The address entered is less than 10 characters. Please modify it and try again.';
+    }
 
-	// Check if this is a Bosta fulfillment sync and validate Bosta SKU
-	if ($order_action && isset($order_action['fulfillmentType']) && $order_action['fulfillmentType'] === 'bosta_fulfillment') {
-		$products_without_sku = [];
+    // Check if this is a Bosta fulfillment sync and validate Bosta SKU
+    if ($order_action && isset($order_action['fulfillmentType']) && $order_action['fulfillmentType'] === 'bosta_fulfillment') {
+        $products_without_sku = [];
+        
+        foreach ($order->get_items() as $item) {
+            $product = $item->get_product();
+            if ($product) {
+                $product_id = $product->get_id();
+                $bosta_sku = '';
+                
+                // If it's a variation, get the SKU from the variation
+                if ($product->is_type('variation')) {
+                    $bosta_sku = get_post_meta($product_id, '_bosta_sku', true);
+                } else {
+                    // For simple products, get the SKU from the product
+                    $bosta_sku = Bosta_Fulfillment::get_product_sku($product_id);
+                }
+                
+                if (empty($bosta_sku)) {
+                    $products_without_sku[] = $product->get_name();
+                }
+            }
+        }
+        
+        if (!empty($products_without_sku)) {
+            $errors[] = 'Bosta SKU is required for products: ' . implode(', ', $products_without_sku);
+        }
+    }
 
-		foreach ($order->get_items() as $item) {
-			$product = $item->get_product();
-			if ($product) {
-				$product_id = $product->get_id();
-				$bosta_sku = '';
+    if (!empty($errors)) {
+        $msg = implode('', $errors);
+    }
 
-				// If it's a variation, get the SKU from the variation
-				if ($product->is_type('variation')) {
-					$bosta_sku = get_post_meta($product_id, '_bosta_sku', true);
-				} else {
-					// For simple products, get the SKU from the product
-					$bosta_sku = Bosta_Fulfillment::get_product_sku($product_id);
-				}
-
-				if (empty($bosta_sku)) {
-					$products_without_sku[] = $product->get_name();
-				}
-			}
-		}
-
-		if (!empty($products_without_sku)) {
-			$errors[] = 'Bosta SKU is required for products: ' . implode(', ', $products_without_sku);
-		}
-	}
-
-	if (!empty($errors)) {
-		$msg = implode('', $errors);
-	}
-
-	return $msg;
+    return $msg;
 }
 
 function bosta_handle_send_orders_bulk_action($params)
@@ -1260,7 +1248,7 @@ function bosta_handle_send_orders_bulk_action($params)
 	$APIKey = $params['APIKey'];
 	$orders = $params['orders'];
 	$order_action = $params['order_action'];
-
+	
 	// Set all orders to processing status first
 	foreach ($orders as $order) {
 		$order->update_meta_data('bosta_sync_status', 'processing');
@@ -1270,22 +1258,22 @@ function bosta_handle_send_orders_bulk_action($params)
 
 	$formatted_orders = [];
 	$failed_orders = [];
-
+	
 	foreach ($orders as $order) {
 		$isOrderSyncedWithBosta = !empty($order->get_meta('bosta_tracking_number'));
 		if (!$isOrderSyncedWithBosta) {
-			$validation_error = bosta_validate_order_fields($order, $order_action);
-			if ($validation_error) {
+            $validation_error = bosta_validate_order_fields($order, $order_action);
+            if ($validation_error) {
 				$order_id = '#' . $order->get_id();
-				bosta_format_failed_order_message($validation_error, $order_id);
-				// Update order metadata with error
-				$order->update_meta_data('bosta_sync_status', 'failed');
-				$order->update_meta_data('bosta_sync_error', $validation_error);
-				$order->save();
-				$failed_orders[] = ['order_id' => $order->get_id(), 'error' => $validation_error];
-				continue;
-			}
-			$formatted_orders[] = bosta_format_order_payload($order, $order_action);
+                bosta_format_failed_order_message($validation_error, $order_id);
+                // Update order metadata with error
+                $order->update_meta_data('bosta_sync_status', 'failed');
+                $order->update_meta_data('bosta_sync_error', $validation_error);
+                $order->save();
+                $failed_orders[] = ['order_id' => $order->get_id(), 'error' => $validation_error];
+                continue;
+            }
+            $formatted_orders[] = bosta_format_order_payload($order, $order_action);
 		} else {
 			// Already synced - update status to success if not already set
 			if (empty($order->get_meta('bosta_sync_status'))) {
@@ -1309,7 +1297,7 @@ function bosta_handle_send_orders_bulk_action($params)
 	$chunks = array_chunk($formatted_orders, $chunkSize);
 	$successfulDeliveriesCount = 0;
 	$allFailedDeliveries = [];
-
+	
 	foreach ($chunks as $chunk) {
 		$body = (object)[
 			'deliveries' => $chunk,
@@ -1327,7 +1315,7 @@ function bosta_handle_send_orders_bulk_action($params)
 				if (is_object($order_payload)) {
 					$order_payload = json_decode(json_encode($order_payload), true);
 				}
-
+				
 				$business_reference = $order_payload['businessReference'] ?? '';
 				if (strpos($business_reference, 'Woocommerce_') === 0) {
 					$order_id = str_replace('Woocommerce_', '', $business_reference);
@@ -1344,35 +1332,35 @@ function bosta_handle_send_orders_bulk_action($params)
 			continue; // Continue with next chunk instead of returning
 		}
 
-		// Regular sync response structure
-		if (!$response['body'] || !is_array($response['body']) || !isset($response['body']['data'])) {
-			$error_message = 'Invalid response structure from API';
-			bosta_set_transient('bosta_errors', $error_message);
-			// Update all orders in this chunk to failed status
-			foreach ($chunk as $order_payload) {
-				// Convert stdClass to array if needed
-				if (is_object($order_payload)) {
-					$order_payload = json_decode(json_encode($order_payload), true);
-				}
-
-				$business_reference = $order_payload['businessReference'] ?? '';
-				if (strpos($business_reference, 'Woocommerce_') === 0) {
-					$order_id = str_replace('Woocommerce_', '', $business_reference);
-					if (is_numeric($order_id)) {
-						$order = wc_get_order($order_id);
-						if ($order) {
-							$order->update_meta_data('bosta_sync_status', 'failed');
-							$order->update_meta_data('bosta_sync_error', $error_message);
-							$order->save();
+			// Regular sync response structure
+			if (!$response['body'] || !is_array($response['body']) || !isset($response['body']['data'])) {
+				$error_message = 'Invalid response structure from API';
+				bosta_set_transient('bosta_errors', $error_message);
+				// Update all orders in this chunk to failed status
+				foreach ($chunk as $order_payload) {
+					// Convert stdClass to array if needed
+					if (is_object($order_payload)) {
+						$order_payload = json_decode(json_encode($order_payload), true);
+					}
+					
+					$business_reference = $order_payload['businessReference'] ?? '';
+					if (strpos($business_reference, 'Woocommerce_') === 0) {
+						$order_id = str_replace('Woocommerce_', '', $business_reference);
+						if (is_numeric($order_id)) {
+							$order = wc_get_order($order_id);
+							if ($order) {
+								$order->update_meta_data('bosta_sync_status', 'failed');
+								$order->update_meta_data('bosta_sync_error', $error_message);
+								$order->save();
+							}
 						}
 					}
 				}
+				continue; // Continue with next chunk instead of returning
 			}
-			continue; // Continue with next chunk instead of returning
-		}
-		$data = $response['body']['data'];
-		$failedDeliveries = $data['failedDeliveries'] ?? [];
-		$createdDeliveriesIds = $data['createdDeliveriesIds'] ?? $data;
+			$data = $response['body']['data'];
+			$failedDeliveries = $data['failedDeliveries'] ?? [];
+			$createdDeliveriesIds = $data['createdDeliveriesIds'] ?? $data;
 
 		// Update order metadata (this will also clean up sync status and errors for successful orders)
 		bosta_get_woocommerce_deliveries_data($createdDeliveriesIds, $APIKey);
@@ -1389,13 +1377,13 @@ function bosta_handle_send_orders_bulk_action($params)
 		foreach ($allFailedDeliveries as $failed_delivery) {
 			$business_reference = $failed_delivery['businessReference'] ?? 'Unknown';
 			$error_message = $failed_delivery['errorMessage'] ?? 'Unknown error';
-
+			
 			// Extract order ID from business reference (format: Woocommerce_123)
 			$order_id = null;
 			if (strpos($business_reference, 'Woocommerce_') === 0) {
 				$order_id = str_replace('Woocommerce_', '', $business_reference);
 			}
-
+			
 			if ($order_id && is_numeric($order_id)) {
 				$order = wc_get_order($order_id);
 				if ($order) {
@@ -1405,7 +1393,7 @@ function bosta_handle_send_orders_bulk_action($params)
 					$order->save();
 				}
 			}
-
+			
 			bosta_format_failed_order_message($error_message, $business_reference);
 		}
 	}
@@ -1547,8 +1535,8 @@ function bosta_get_woocommerce_deliveries_data($deliveriesIds, $APIKey)
 			if (!$response['success']) {
 				$errorMessage = $response['error'] ?? '';
 				throw new Exception($errorMessage);
-			}
-
+			}		
+					
 			$deliveriesData = $response['body']['data'] ?? [];
 
 			$returnedDeliveryIds = [];
@@ -1574,11 +1562,11 @@ function bosta_get_woocommerce_deliveries_data($deliveriesIds, $APIKey)
 			}
 		}
 	} catch (Exception $e) {
-		error_log('Bosta Plugin: Failed to fetch orders status. Error: ' . $e->getMessage());
+        error_log('Bosta Plugin: Failed to fetch orders status. Error: ' . $e->getMessage());
 
-		$message = 'Bosta Plugin: Failed to fetch orders status. Error: ' . esc_html($e->getMessage());
+        $message = 'Bosta Plugin: Failed to fetch orders status. Error: ' . esc_html($e->getMessage());
 		bosta_set_transient('bosta_errors', "<p>{$message}</p>");
-	}
+    }	
 }
 
 function bosta_format_order_payload($order, $order_action)
@@ -1595,12 +1583,12 @@ function bosta_format_order_payload($order, $order_action)
 	$newOrder->notes = $order->get_customer_note();
 	$newOrder->uniqueBusinessReference = "WC_" . $order->get_id();
 	$newOrder->specs = new stdClass();
-
+	
 	// Only include package details if the checkbox is enabled
 	if ($includeProductDescriptions === 'yes') {
 		$newOrder->specs->packageDetails = bosta_format_package_details($order, $productDescription);
 	}
-
+	
 	// Only add webhook fields if not running on localhost
 	$site_url = get_site_url();
 	if (strpos($site_url, 'localhost') === false && strpos($site_url, '127.0.0.1') === false) {
@@ -1641,8 +1629,7 @@ function bosta_format_order_payload($order, $order_action)
 	return $newOrder;
 }
 
-function bosta_format_goods_info($order)
-{
+function bosta_format_goods_info($order) {
 	$goodsInfo = new stdClass();
 
 	$order_regular_price = 0;
@@ -1669,13 +1656,13 @@ function bosta_format_package_details($order, $productDescription)
 
 	foreach ($items as $item) {
 		$product = $item->get_product();
-
+		
 		// If product type includes bundle or woosb, don't count it
 		$product_type = $product->get_type();
 		if (strpos($product_type, 'bundle') === false && strpos($product_type, 'woosb') === false) {
 			$itemsCount += $item->get_quantity();
 		}
-
+		
 		$descArray[] = bosta_format_order_description($productDescription, $product->get_sku(), $product->get_name(), $item->get_quantity());
 		$index++;
 	}
@@ -1683,12 +1670,12 @@ function bosta_format_package_details($order, $productDescription)
 	$packageDetails = new stdClass();
 	$packageDetails->itemsCount = $itemsCount;
 	$description = implode(", ", $descArray);
-
+	
 	// Limit description to 500 characters as per requirements
 	if (mb_strlen($description) > 500) {
 		$description = mb_substr($description, 0, 497) . '...';
 	}
-
+	
 	$packageDetails->description = $description;
 
 	return $packageDetails;
@@ -1704,9 +1691,9 @@ function bosta_format_order_description($productDescription, $sku, $name, $quant
 
 	if (is_array($productDescription)) {
 		if (in_array('name', $productDescription)) {
-			$desc .= $name;
-		}
-
+            $desc .= $name;
+        }
+		
 		if ($maintainOldDescription === 'yes') {
 			// Old format: Product Name [SKU] (Quantity)
 			if (in_array('sku', $productDescription) && !empty($sku)) {
@@ -1732,13 +1719,13 @@ function bosta_format_receiver_details($order)
 	$receiver->firstName = mb_substr($firstname, 0, 50);
 	$receiver->lastName = $lastname;
 	$receiver->phone = $order->get_billing_phone() ?: $order->get_shipping_phone();
-
+	
 	// Add second phone number if billing_phone_2 field exists and has a value
 	$second_phone = $order->get_meta('_billing_phone_2', true);
 	if (!empty($second_phone)) {
 		$receiver->secondPhone = $second_phone;
 	}
-
+	
 	return $receiver;
 }
 
@@ -1906,15 +1893,15 @@ function bosta_format_updated_order($order)
 	}
 
 	$newOrder->goodsInfo = bosta_format_goods_info($order);
-
+	
 	$bosta_settings = get_option('woocommerce_bosta_settings');
 	$productDescription = isset($bosta_settings['ProductDescription']) ? $bosta_settings['ProductDescription'] : array('name');
 	$includeProductDescriptions = isset($bosta_settings['IncludeProductDescriptions']) ? $bosta_settings['IncludeProductDescriptions'] : 'yes';
 	$newOrder->specs = new stdClass();
-
+	
 	// Check if this is a fulfillment order
 	$is_fulfillment = $order->get_meta('bosta_is_fulfillment');
-
+	
 	// Only include package details if the checkbox is enabled AND it's not a fulfillment order
 	if ($includeProductDescriptions === 'yes' && !$is_fulfillment) {
 		$newOrder->specs->packageDetails = bosta_format_package_details($order, $productDescription);
@@ -1940,35 +1927,35 @@ function bosta_render_custom_buttons($send_all_nonce, $fetch_status)
 	$auto_sync_nonce = wp_create_nonce('bosta_auto_sync_nonce');
 	$api_key = bosta_get_api_key();
 	$is_fulfillment_enabled = false;
-
+	
 	// Check if business has fulfillment enabled
 	$is_fulfillment_enabled = Bosta_Fulfillment_Cache::is_fulfillment_enabled();
-
-?>
-	<div class="alignleft bosta_custom_buttons_div">
-		<div class="rightDiv">
-			<button type="submit" name="create_pickup" class="orders-button bosta_custom_button" value="yes">Create Pickup</button>
-			<button type="button" id="send-all-orders-btn" class="orders-button bosta_custom_button">Send all Orders to Bosta</button>
-			<!-- <button type="submit" name="auto_sync_orders" class="orders-button bosta_custom_button" value="yes">Auto Sync Orders</button> -->
-			<input type="hidden" name="bosta_send_all_nonce_field" value="<?php echo esc_attr($send_all_nonce); ?>">
-			<input type="hidden" name="bosta_auto_sync_nonce_field" value="<?php echo esc_attr($auto_sync_nonce); ?>">
-		</div>
-		<div class="leftDiv">
-			<button type="submit" name="fetch_status" class="danger-button bosta_custom_button" value="yes">
-				<img class="refreshIcon" src="<?php echo esc_url(plugins_url("assets/images/refreshIcon.png", __FILE__)); ?>" alt="Bosta"> Refresh Bosta Status
-			</button>
-			<input type="hidden" name="bosta_fetch_status_nonce_field" value="<?php echo esc_attr($fetch_status); ?>">
-		</div>
-		<input type="hidden" name="page_num" value="<?php echo esc_attr($_GET['paged'] ?? '1'); ?>">
-	</div>
-
-	<?php
-	// Render fulfillment modal using modular class
-	if ($is_fulfillment_enabled) {
-		Bosta_Fulfillment_UI::render_fulfillment_modal();
-	}
+	
 	?>
-<?php
+		<div class="alignleft bosta_custom_buttons_div">
+			<div class="rightDiv">
+				<button type="submit" name="create_pickup" class="orders-button bosta_custom_button" value="yes">Create Pickup</button>
+				<button type="button" id="send-all-orders-btn" class="orders-button bosta_custom_button">Send all Orders to Bosta</button>
+				<!-- <button type="submit" name="auto_sync_orders" class="orders-button bosta_custom_button" value="yes">Auto Sync Orders</button> -->
+				<input type="hidden" name="bosta_send_all_nonce_field" value="<?php echo esc_attr($send_all_nonce); ?>">
+				<input type="hidden" name="bosta_auto_sync_nonce_field" value="<?php echo esc_attr($auto_sync_nonce); ?>">
+			</div>
+			<div class="leftDiv">
+				<button type="submit" name="fetch_status" class="danger-button bosta_custom_button" value="yes">
+					<img class="refreshIcon" src="<?php echo esc_url(plugins_url("assets/images/refreshIcon.png", __FILE__)); ?>" alt="Bosta"> Refresh Bosta Status
+				</button>
+				<input type="hidden" name="bosta_fetch_status_nonce_field" value="<?php echo esc_attr($fetch_status); ?>">
+			</div>
+			<input type="hidden" name="page_num" value="<?php echo esc_attr($_GET['paged'] ?? '1'); ?>">
+		</div>
+		
+		<?php 
+		// Render fulfillment modal using modular class
+		if ($is_fulfillment_enabled) {
+			Bosta_Fulfillment_UI::render_fulfillment_modal();
+		}
+		?>
+	<?php
 }
 
 function bosta_render_status_search_tags()
@@ -2020,54 +2007,54 @@ function bosta_render_status_search_tags()
 	</div>
 
 	<script>
-		document.addEventListener('DOMContentLoaded', function() {
-			// Apply filters button
-			document.getElementById('bosta_apply_filters').addEventListener('click', function() {
-				var bostaStatus = document.getElementById('bosta_status_filter').value;
-				var syncStatus = document.getElementById('bosta_sync_status_filter').value;
-				var rankingStatus = document.getElementById('bosta_ranking_status_filter').value;
-
-				var url = 'edit.php?post_type=shop_order&paged=1';
-
-				if (bostaStatus) {
-					url += '&s=' + encodeURIComponent(bostaStatus);
-				}
-
-				if (syncStatus) {
-					url += '&bosta_sync_status=' + encodeURIComponent(syncStatus);
-				}
-
-				if (rankingStatus) {
-					url += '&bosta_ranking_status=' + encodeURIComponent(rankingStatus);
-				}
-
-				window.location.href = url;
-			});
-
-			// Clear filters button
-			document.getElementById('bosta_clear_filters').addEventListener('click', function() {
-				window.location.href = 'edit.php?post_type=shop_order&paged=1';
-			});
-
-			// Allow Enter key to apply filters
-			document.getElementById('bosta_status_filter').addEventListener('keypress', function(e) {
-				if (e.key === 'Enter') {
-					document.getElementById('bosta_apply_filters').click();
-				}
-			});
-
-			document.getElementById('bosta_sync_status_filter').addEventListener('keypress', function(e) {
-				if (e.key === 'Enter') {
-					document.getElementById('bosta_apply_filters').click();
-				}
-			});
-
-			document.getElementById('bosta_ranking_status_filter').addEventListener('keypress', function(e) {
-				if (e.key === 'Enter') {
-					document.getElementById('bosta_apply_filters').click();
-				}
-			});
+	document.addEventListener('DOMContentLoaded', function() {
+		// Apply filters button
+		document.getElementById('bosta_apply_filters').addEventListener('click', function() {
+			var bostaStatus = document.getElementById('bosta_status_filter').value;
+			var syncStatus = document.getElementById('bosta_sync_status_filter').value;
+			var rankingStatus = document.getElementById('bosta_ranking_status_filter').value;
+			
+			var url = 'edit.php?post_type=shop_order&paged=1';
+			
+			if (bostaStatus) {
+				url += '&s=' + encodeURIComponent(bostaStatus);
+			}
+			
+			if (syncStatus) {
+				url += '&bosta_sync_status=' + encodeURIComponent(syncStatus);
+			}
+			
+			if (rankingStatus) {
+				url += '&bosta_ranking_status=' + encodeURIComponent(rankingStatus);
+			}
+			
+			window.location.href = url;
 		});
+		
+		// Clear filters button
+		document.getElementById('bosta_clear_filters').addEventListener('click', function() {
+			window.location.href = 'edit.php?post_type=shop_order&paged=1';
+		});
+		
+		// Allow Enter key to apply filters
+		document.getElementById('bosta_status_filter').addEventListener('keypress', function(e) {
+			if (e.key === 'Enter') {
+				document.getElementById('bosta_apply_filters').click();
+			}
+		});
+		
+		document.getElementById('bosta_sync_status_filter').addEventListener('keypress', function(e) {
+			if (e.key === 'Enter') {
+				document.getElementById('bosta_apply_filters').click();
+			}
+		});
+		
+		document.getElementById('bosta_ranking_status_filter').addEventListener('keypress', function(e) {
+			if (e.key === 'Enter') {
+				document.getElementById('bosta_apply_filters').click();
+			}
+		});
+	});
 	</script>
 <?php
 }
@@ -2102,7 +2089,7 @@ function bosta_filter_orders_by_sync_status($query_args)
 	}
 
 	$sync_status = sanitize_text_field($_GET['bosta_sync_status']);
-
+	
 	// Initialize meta_query if it doesn't exist
 	if (!isset($query_args['meta_query'])) {
 		$query_args['meta_query'] = array();
@@ -2124,7 +2111,7 @@ function bosta_filter_orders_by_sync_status($query_args)
 				)
 			);
 			break;
-
+			
 		case 'failed':
 			// Orders that have failed sync status
 			$query_args['meta_query'][] = array(
@@ -2133,7 +2120,7 @@ function bosta_filter_orders_by_sync_status($query_args)
 				'compare' => '='
 			);
 			break;
-
+			
 		case 'none':
 			// Orders that have no tracking number and no sync status (not synced)
 			$query_args['meta_query'][] = array(
@@ -2161,7 +2148,7 @@ function bosta_filter_orders_by_ranking_status($query_args)
 	}
 
 	$ranking_status = sanitize_text_field($_GET['bosta_ranking_status']);
-
+	
 	// Store the ranking status for our custom filter
 	set_transient('bosta_current_ranking_filter', $ranking_status, 60);
 
@@ -2187,7 +2174,7 @@ function bosta_apply_ranking_filter_post_query($query_args)
 	}
 
 	// Remove our marker filter
-	$query_args['meta_query'] = array_filter($query_args['meta_query'], function ($meta) {
+	$query_args['meta_query'] = array_filter($query_args['meta_query'], function($meta) {
 		return $meta['key'] !== 'bosta_ranking_filter_marker';
 	});
 
@@ -2206,7 +2193,7 @@ function bosta_apply_ranking_filter_post_query($query_args)
 		if (!$order) continue;
 
 		$ranking_data = $order->get_meta('bosta_consignee_ranking', true);
-
+		
 		switch ($ranking_status) {
 			case 'new_customer':
 				// Include both new customers and orders with no ranking data
@@ -2214,33 +2201,27 @@ function bosta_apply_ranking_filter_post_query($query_args)
 					$filtered_order_ids[] = $order_id;
 				}
 				break;
-
+				
 			case 'high_rate':
-				if (
-					!empty($ranking_data) && isset($ranking_data['deliverySuccessRate']) &&
-					isset($ranking_data['isNewCustomer']) && $ranking_data['isNewCustomer'] === false &&
-					$ranking_data['deliverySuccessRate'] > 70
-				) {
+				if (!empty($ranking_data) && isset($ranking_data['deliverySuccessRate']) && 
+					isset($ranking_data['isNewCustomer']) && $ranking_data['isNewCustomer'] === false && 
+					$ranking_data['deliverySuccessRate'] > 70) {
 					$filtered_order_ids[] = $order_id;
 				}
 				break;
-
+				
 			case 'average_rate':
-				if (
-					!empty($ranking_data) && isset($ranking_data['deliverySuccessRate']) &&
-					isset($ranking_data['isNewCustomer']) && $ranking_data['isNewCustomer'] === false &&
-					$ranking_data['deliverySuccessRate'] >= 40 && $ranking_data['deliverySuccessRate'] <= 70
-				) {
+				if (!empty($ranking_data) && isset($ranking_data['deliverySuccessRate']) && 
+					isset($ranking_data['isNewCustomer']) && $ranking_data['isNewCustomer'] === false && 
+					$ranking_data['deliverySuccessRate'] >= 40 && $ranking_data['deliverySuccessRate'] <= 70) {
 					$filtered_order_ids[] = $order_id;
 				}
 				break;
-
+				
 			case 'low_rate':
-				if (
-					!empty($ranking_data) && isset($ranking_data['deliverySuccessRate']) &&
-					isset($ranking_data['isNewCustomer']) && $ranking_data['isNewCustomer'] === false &&
-					$ranking_data['deliverySuccessRate'] < 40
-				) {
+				if (!empty($ranking_data) && isset($ranking_data['deliverySuccessRate']) && 
+					isset($ranking_data['isNewCustomer']) && $ranking_data['isNewCustomer'] === false && 
+					$ranking_data['deliverySuccessRate'] < 40) {
 					$filtered_order_ids[] = $order_id;
 				}
 				break;
@@ -2298,7 +2279,7 @@ function bosta_filter_orders_by_sync_status_legacy($query)
 	}
 
 	$sync_status = sanitize_text_field($_GET['bosta_sync_status']);
-
+	
 	// Initialize meta_query if it doesn't exist
 	if (!isset($query->query_vars['meta_query'])) {
 		$query->query_vars['meta_query'] = array();
@@ -2320,7 +2301,7 @@ function bosta_filter_orders_by_sync_status_legacy($query)
 				)
 			);
 			break;
-
+			
 		case 'failed':
 			// Orders that have failed sync status
 			$query->query_vars['meta_query'][] = array(
@@ -2329,7 +2310,7 @@ function bosta_filter_orders_by_sync_status_legacy($query)
 				'compare' => '='
 			);
 			break;
-
+			
 		case 'none':
 			// Orders that have no tracking number and no sync status (not synced)
 			$query->query_vars['meta_query'][] = array(
@@ -2374,7 +2355,7 @@ function bosta_filter_orders_by_ranking_status_legacy($query)
 	}
 
 	$ranking_status = sanitize_text_field($_GET['bosta_ranking_status']);
-
+	
 	// Store the ranking status for our custom filter
 	set_transient('bosta_current_ranking_filter_legacy', $ranking_status, 60);
 
@@ -2394,7 +2375,7 @@ function bosta_filter_orders_by_ranking_status_legacy($query)
 		if (!$order) continue;
 
 		$ranking_data = $order->get_meta('bosta_consignee_ranking', true);
-
+		
 		switch ($ranking_status) {
 			case 'new_customer':
 				// Include both new customers and orders with no ranking data
@@ -2402,33 +2383,27 @@ function bosta_filter_orders_by_ranking_status_legacy($query)
 					$filtered_order_ids[] = $order_id;
 				}
 				break;
-
+				
 			case 'high_rate':
-				if (
-					!empty($ranking_data) && isset($ranking_data['deliverySuccessRate']) &&
-					isset($ranking_data['isNewCustomer']) && $ranking_data['isNewCustomer'] === false &&
-					$ranking_data['deliverySuccessRate'] > 70
-				) {
+				if (!empty($ranking_data) && isset($ranking_data['deliverySuccessRate']) && 
+					isset($ranking_data['isNewCustomer']) && $ranking_data['isNewCustomer'] === false && 
+					$ranking_data['deliverySuccessRate'] > 70) {
 					$filtered_order_ids[] = $order_id;
 				}
 				break;
-
+				
 			case 'average_rate':
-				if (
-					!empty($ranking_data) && isset($ranking_data['deliverySuccessRate']) &&
-					isset($ranking_data['isNewCustomer']) && $ranking_data['isNewCustomer'] === false &&
-					$ranking_data['deliverySuccessRate'] >= 40 && $ranking_data['deliverySuccessRate'] <= 70
-				) {
+				if (!empty($ranking_data) && isset($ranking_data['deliverySuccessRate']) && 
+					isset($ranking_data['isNewCustomer']) && $ranking_data['isNewCustomer'] === false && 
+					$ranking_data['deliverySuccessRate'] >= 40 && $ranking_data['deliverySuccessRate'] <= 70) {
 					$filtered_order_ids[] = $order_id;
 				}
 				break;
-
+				
 			case 'low_rate':
-				if (
-					!empty($ranking_data) && isset($ranking_data['deliverySuccessRate']) &&
-					isset($ranking_data['isNewCustomer']) && $ranking_data['isNewCustomer'] === false &&
-					$ranking_data['deliverySuccessRate'] < 40
-				) {
+				if (!empty($ranking_data) && isset($ranking_data['deliverySuccessRate']) && 
+					isset($ranking_data['isNewCustomer']) && $ranking_data['isNewCustomer'] === false && 
+					$ranking_data['deliverySuccessRate'] < 40) {
 					$filtered_order_ids[] = $order_id;
 				}
 				break;
@@ -2450,32 +2425,31 @@ function bosta_filter_orders_by_ranking_status_legacy($query)
 }
 
 // Handle form submissions at init stage
-function bosta_handle_form_submissions()
-{
-	// Check if we're on the orders page and have a send_all_orders action
-	if (isset($_GET['send_all_orders']) && $_GET['send_all_orders'] === 'yes') {
-		// Verify nonce
-		$nonce_field = 'bosta_send_all_nonce_field';
-		if (!isset($_GET[$nonce_field]) || !wp_verify_nonce($_GET[$nonce_field], 'bosta_send_all_nonce')) {
-			wp_die('Security check failed');
-		}
-
-		// Get fulfillment type
-		$fulfillment_type = isset($_GET['fulfillment_type']) ? sanitize_text_field($_GET['fulfillment_type']) : null;
-
-		// Handle the action
-		bosta_handle_custom_bulk_action(
-			'bosta_send_all_nonce',
-			$nonce_field,
-			'sync_to_bosta',
-			$fulfillment_type
-		);
-
-		// Redirect to prevent form resubmission
-		$redirect_url = remove_query_arg(['send_all_orders', 'fulfillment_type', $nonce_field], $_SERVER['REQUEST_URI']);
-		wp_safe_redirect($redirect_url);
-		exit;
-	}
+function bosta_handle_form_submissions() {
+            // Check if we're on the orders page and have a send_all_orders action
+        if (isset($_GET['send_all_orders']) && $_GET['send_all_orders'] === 'yes') {
+            // Verify nonce
+            $nonce_field = 'bosta_send_all_nonce_field';
+            if (!isset($_GET[$nonce_field]) || !wp_verify_nonce($_GET[$nonce_field], 'bosta_send_all_nonce')) {
+                wp_die('Security check failed');
+            }
+            
+            // Get fulfillment type
+            $fulfillment_type = isset($_GET['fulfillment_type']) ? sanitize_text_field($_GET['fulfillment_type']) : null;
+        
+        // Handle the action
+        bosta_handle_custom_bulk_action(
+            'bosta_send_all_nonce',
+            $nonce_field,
+            'sync_to_bosta',
+            $fulfillment_type
+        );
+        
+        // Redirect to prevent form resubmission
+        $redirect_url = remove_query_arg(['send_all_orders', 'fulfillment_type', $nonce_field], $_SERVER['REQUEST_URI']);
+        wp_safe_redirect($redirect_url);
+        exit;
+    }
 }
 
 add_action('woocommerce_order_list_table_extra_tablenav', 'bosta_add_extra_tablenav_components_hpos', 20, 2);
@@ -2539,41 +2513,39 @@ function bosta_add_extra_tablenav_components($which)
 /**
  * Add product sync button to products listing page
  */
-function bosta_add_product_sync_button()
-{
+function bosta_add_product_sync_button() {
 	$api_key = bosta_get_api_key();
 	if (empty($api_key)) {
 		return;
 	}
-
+	
 	// Hide button only if auto-sync is enabled AND initial sync via button has been completed
 	$is_auto_sync_enabled = Bosta_Product_Sync::is_auto_sync_enabled();
 	$initial_sync_completed = get_option('bosta_initial_product_sync_completed', false);
-
+	
 	if ($is_auto_sync_enabled && $initial_sync_completed) {
 		return;
 	}
-
-?>
+	
+	?>
 	<div class="alignleft bosta_product_sync_button_div" style="margin: 10px 0;">
 		<button type="button" id="sync-products-to-bosta-btn" class="button button-primary">
 			<?php _e('Sync my products to Bosta', 'bosta'); ?>
 		</button>
 	</div>
-<?php
+	<?php
 }
 
 /**
  * Enqueue product sync CSS on products listing page
  */
 add_action('admin_enqueue_scripts', 'bosta_enqueue_product_sync_styles');
-function bosta_enqueue_product_sync_styles($hook)
-{
+function bosta_enqueue_product_sync_styles($hook) {
 	$screen = get_current_screen();
 	if (!$screen || $screen->post_type !== 'product' || $screen->base !== 'edit') {
 		return;
 	}
-
+	
 	wp_enqueue_style(
 		'bosta-product-sync-css',
 		plugins_url('Css/product-sync.css', __FILE__),
@@ -2586,8 +2558,7 @@ function bosta_enqueue_product_sync_styles($hook)
  * Get total count of products for modal display
  * Since we sync all products (create unsynced and update synced), we show total count
  */
-function bosta_get_unsynced_products_count()
-{
+function bosta_get_unsynced_products_count() {
 	$products = Bosta_Product_Sync::get_all_products();
 	return count($products);
 }
@@ -2596,22 +2567,21 @@ function bosta_get_unsynced_products_count()
  * Add product sync modal and JavaScript to products listing page
  */
 add_action('admin_footer', 'bosta_add_product_sync_modal');
-function bosta_add_product_sync_modal()
-{
+function bosta_add_product_sync_modal() {
 	$screen = get_current_screen();
 	if (!$screen || $screen->post_type !== 'product' || $screen->base !== 'edit') {
 		return;
 	}
-
+	
 	$api_key = bosta_get_api_key();
 	if (empty($api_key)) {
 		return;
 	}
-
+	
 	// Get total count of products (we sync all products: create unsynced and update synced)
 	$product_count = bosta_get_unsynced_products_count();
-
-?>
+	
+	?>
 	<!-- Product Sync Confirmation Modal -->
 	<div id="bosta-product-sync-modal" class="bosta-product-sync-modal" style="display: none;">
 		<div class="bosta-product-sync-modal-overlay"></div>
@@ -2632,106 +2602,106 @@ function bosta_add_product_sync_modal()
 			</div>
 		</div>
 	</div>
-
+	
 	<script type="text/javascript">
-		jQuery(document).ready(function($) {
-			// Product Sync to Bosta functionality
-			var syncButton = $('#sync-products-to-bosta-btn');
-			var syncModal = $('#bosta-product-sync-modal');
-			var confirmButton = $('#product-sync-modal-confirm');
-			var cancelButton = $('#product-sync-modal-cancel');
-			var modalClose = $('.bosta-product-sync-modal-close');
-			var isSyncing = false;
-			var originalButtonText = confirmButton.text();
-
-			// Function to show toast notification
-			function showToast(message, type) {
-				var tagText = type === 'error' ? '<?php _e('Failed', 'bosta'); ?>' : '<?php _e('Success', 'bosta'); ?>';
-				var tagClass = type === 'error' ? 'bosta-toast-tag-error' : 'bosta-toast-tag-success';
-				var toast = $('<div class="bosta-toast bosta-toast-' + (type || 'success') + '">' +
-					'<span class="bosta-toast-tag ' + tagClass + '">' + tagText + '</span>' +
-					'<span class="bosta-toast-message">' + message + '</span>' +
-					'</div>');
-				$('body').append(toast);
+	jQuery(document).ready(function($) {
+		// Product Sync to Bosta functionality
+		var syncButton = $('#sync-products-to-bosta-btn');
+		var syncModal = $('#bosta-product-sync-modal');
+		var confirmButton = $('#product-sync-modal-confirm');
+		var cancelButton = $('#product-sync-modal-cancel');
+		var modalClose = $('.bosta-product-sync-modal-close');
+		var isSyncing = false;
+		var originalButtonText = confirmButton.text();
+		
+		// Function to show toast notification
+		function showToast(message, type) {
+			var tagText = type === 'error' ? '<?php _e('Failed', 'bosta'); ?>' : '<?php _e('Success', 'bosta'); ?>';
+			var tagClass = type === 'error' ? 'bosta-toast-tag-error' : 'bosta-toast-tag-success';
+			var toast = $('<div class="bosta-toast bosta-toast-' + (type || 'success') + '">' +
+				'<span class="bosta-toast-tag ' + tagClass + '">' + tagText + '</span>' +
+				'<span class="bosta-toast-message">' + message + '</span>' +
+				'</div>');
+			$('body').append(toast);
+			setTimeout(function() {
+				toast.addClass('show');
+			}, 100);
+			setTimeout(function() {
+				toast.removeClass('show');
 				setTimeout(function() {
-					toast.addClass('show');
-				}, 100);
-				setTimeout(function() {
-					toast.removeClass('show');
-					setTimeout(function() {
-						toast.remove();
-					}, 300);
-				}, 3000);
+					toast.remove();
+				}, 300);
+			}, 3000);
+		}
+		
+		// Show modal when sync button is clicked
+		syncButton.on('click', function(e) {
+			e.preventDefault();
+			// Reset button state
+			confirmButton.prop('disabled', false).text(originalButtonText);
+			isSyncing = false;
+			syncModal.show();
+		});
+		
+		// Close modal when cancel button or close icon is clicked (only if not syncing)
+		cancelButton.add(modalClose).on('click', function() {
+			if (!isSyncing) {
+				syncModal.hide();
 			}
-
-			// Show modal when sync button is clicked
-			syncButton.on('click', function(e) {
-				e.preventDefault();
-				// Reset button state
-				confirmButton.prop('disabled', false).text(originalButtonText);
-				isSyncing = false;
-				syncModal.show();
-			});
-
-			// Close modal when cancel button or close icon is clicked (only if not syncing)
-			cancelButton.add(modalClose).on('click', function() {
-				if (!isSyncing) {
+		});
+		
+		// Prevent closing modal when clicking overlay during sync
+		$('.bosta-product-sync-modal-overlay').on('click', function(e) {
+			if (!isSyncing) {
+				syncModal.hide();
+			}
+		});
+		
+		// Confirm sync
+		confirmButton.on('click', function() {
+			isSyncing = true;
+			
+			// Set button to loading state
+			confirmButton.prop('disabled', true).html('<span class="spinner is-active" style="float: none; margin: 0 5px 0 0; visibility: visible;"></span><?php _e('Syncing...', 'bosta'); ?>');
+			
+			$.ajax({
+				url: ajaxurl,
+				type: 'POST',
+				data: {
+					action: 'bosta_sync_products_to_bosta',
+					nonce: '<?php echo wp_create_nonce('bosta_sync_products_to_bosta'); ?>'
+				},
+				success: function(response) {
+					// Close modal
 					syncModal.hide();
-				}
-			});
-
-			// Prevent closing modal when clicking overlay during sync
-			$('.bosta-product-sync-modal-overlay').on('click', function(e) {
-				if (!isSyncing) {
-					syncModal.hide();
-				}
-			});
-
-			// Confirm sync
-			confirmButton.on('click', function() {
-				isSyncing = true;
-
-				// Set button to loading state
-				confirmButton.prop('disabled', true).html('<span class="spinner is-active" style="float: none; margin: 0 5px 0 0; visibility: visible;"></span><?php _e('Syncing...', 'bosta'); ?>');
-
-				$.ajax({
-					url: ajaxurl,
-					type: 'POST',
-					data: {
-						action: 'bosta_sync_products_to_bosta',
-						nonce: '<?php echo wp_create_nonce('bosta_sync_products_to_bosta'); ?>'
-					},
-					success: function(response) {
-						// Close modal
-						syncModal.hide();
-
-						if (response.success) {
-							// Show success toast (green)
-							showToast(response.data, 'success');
-							// Reload page after toast to update button state
-							setTimeout(function() {
-								location.reload();
-							}, 3500);
-						} else {
-							// Show error toast (red)
-							showToast(response.data, 'error');
-							// Reset button state
-							confirmButton.prop('disabled', false).text(originalButtonText);
-							isSyncing = false;
-						}
-					},
-					error: function() {
-						// Close modal
-						syncModal.hide();
+					
+					if (response.success) {
+						// Show success toast (green)
+						showToast(response.data, 'success');
+						// Reload page after toast to update button state
+						setTimeout(function() {
+							location.reload();
+						}, 3500);
+					} else {
 						// Show error toast (red)
-						showToast('<?php _e('An error occurred while syncing products.', 'bosta'); ?>', 'error');
+						showToast(response.data, 'error');
 						// Reset button state
 						confirmButton.prop('disabled', false).text(originalButtonText);
 						isSyncing = false;
 					}
-				});
+				},
+				error: function() {
+					// Close modal
+					syncModal.hide();
+					// Show error toast (red)
+					showToast('<?php _e('An error occurred while syncing products.', 'bosta'); ?>', 'error');
+					// Reset button state
+					confirmButton.prop('disabled', false).text(originalButtonText);
+					isSyncing = false;
+				}
 			});
 		});
+	});
 	</script>
 	<?php
 }
@@ -2739,7 +2709,7 @@ function bosta_add_product_sync_modal()
 function bosta_handle_custom_bulk_action($nonce_action, $nonce_field, $action_type, $fulfillment_type = null)
 {
 	$nonce_value = isset($_GET[$nonce_field]) ? sanitize_text_field($_GET[$nonce_field]) : null;
-
+	
 	if ($nonce_value && check_admin_referer($nonce_action, $nonce_field)) {
 		$current_user_id = get_current_user_id();
 		$current_page = isset($_GET['page_num']) ? $_GET['page_num'] : 1;
@@ -2817,7 +2787,7 @@ function bosta_wporg_custom_box_html($post)
 		}
 		$delivery = $response['body']['data']['deliveries'][0];
 		if ($delivery['state']['value'] != 'Created' && $delivery['state']['value'] != 'Pickup requested') {
-	?>
+		?>
 			<script>
 				let div = document.createElement("div");
 				let p = document.createElement("p");
@@ -2828,7 +2798,7 @@ function bosta_wporg_custom_box_html($post)
 				const parent = document.getElementsByClassName("wrap")[0];
 				parent.insertBefore(div, parent.children[3]);
 			</script>
-	<?php
+		<?php
 		}
 	}
 }
@@ -2879,8 +2849,7 @@ function bosta_init_shipping_class()
 				// Fulfillment section field rendering moved to Bosta_Fulfillment_UI class
 			}
 
-			private function is_bosta_shipping_settings_screen()
-			{
+			private function is_bosta_shipping_settings_screen() {
 				if (!is_admin()) {
 					return false;
 				}
@@ -2901,20 +2870,20 @@ function bosta_init_shipping_class()
 					include $settings_html_file;
 				}
 			}
-
-
-
+			
+			
+			
 			// Fulfillment section field rendering moved to Bosta_Fulfillment_UI class
-
+			
 			private function get_business_info($api_key)
 			{
 				$url = BOSTA_ENV_URL_V0 . '/businesses/' . esc_html($api_key) . '/info';
 				$response = bosta_send_api_request('GET', $url);
-
+				
 				if ($response['success']) {
 					return $response['body'];
 				}
-
+				
 				return array();
 			}
 
@@ -2924,19 +2893,21 @@ function bosta_init_shipping_class()
 					$apiKey = $this->get_option('APIKey');
 					if (!empty($apiKey)) {
 						$this->update_plugin_flex_ship_settings($apiKey);
+						
+					
 					}
 				}
 			}
 
 			function bosta_generate_webhook_secret()
 			{
-				// Handle webhook registration for existing users
-				$webhook_secret = Bosta_Webhook_Manager::get_webhook_secret();
-				if (empty($webhook_secret)) {
-					$webhook_secret = Bosta_Webhook_Manager::generate_webhook_secret();
-					Bosta_Webhook_Manager::set_webhook_secret($webhook_secret);
-					Bosta_Webhook_Manager::register_webhook_with_bosta($webhook_secret);
-				}
+					// Handle webhook registration for existing users
+					$webhook_secret = Bosta_Webhook_Manager::get_webhook_secret();
+					if (empty($webhook_secret)) {
+						$webhook_secret = Bosta_Webhook_Manager::generate_webhook_secret();
+						Bosta_Webhook_Manager::set_webhook_secret($webhook_secret);
+						Bosta_Webhook_Manager::register_webhook_with_bosta($webhook_secret);
+					}
 			}
 
 			function init_form_fields()
@@ -3059,7 +3030,7 @@ function bosta_init_shipping_class()
 					delete_transient('bosta_city_areas');
 					delete_transient('bosta_country_id_Transient');
 
-					$this->update_option('ResetZoningCache', 'no');
+			        $this->update_option('ResetZoningCache', 'no');
 				}
 			}
 
@@ -3082,16 +3053,16 @@ function bosta_init_shipping_class()
 
 				$settings_saved = parent::process_admin_options();
 				$this->bosta_check_reset_zoning_cache_toggle();
-
-				// Check if Product Auto Sync is disabled (clear flag whenever it's disabled)
-				$newProductAutoSync = isset($_POST['woocommerce_bosta_EnableProductAutoSync']) ? 'yes' : 'no';
-				if ($newProductAutoSync === 'no') {
-					// Clear the initial sync flag when auto-sync is disabled, so button can reappear
-					delete_option('bosta_initial_product_sync_completed');
-
-					// Update feature configuration to indicate products are not synced
-					Bosta_Product_Sync::update_feature_configuration(false);
-				}
+				
+			// Check if Product Auto Sync is disabled (clear flag whenever it's disabled)
+			$newProductAutoSync = isset($_POST['woocommerce_bosta_EnableProductAutoSync']) ? 'yes' : 'no';
+			if ($newProductAutoSync === 'no') {
+				// Clear the initial sync flag when auto-sync is disabled, so button can reappear
+				delete_option('bosta_initial_product_sync_completed');
+				
+				// Update feature configuration to indicate products are not synced
+				Bosta_Product_Sync::update_feature_configuration(false);
+			}
 
 				$newAPIKey = $this->get_option('APIKey');
 				$newFlexship = $this->get_option('EnableFlexShipping');
@@ -3105,7 +3076,7 @@ function bosta_init_shipping_class()
 					WC_Admin_Settings::add_error(__('Error: API Key is invalid.', 'bosta'));
 					return false;
 				}
-
+				
 				if (!$settings_saved) {
 					return false;
 				}
@@ -3116,7 +3087,7 @@ function bosta_init_shipping_class()
 					if (!empty($webhook_secret)) {
 						Bosta_Webhook_Manager::register_webhook_with_bosta($webhook_secret);
 					}
-
+					
 					if ($newFlexship === 'yes') {
 						$this->update_bosta_flex_ship_settings($newAPIKey, $newFlexship, $newFlexshipValue);
 					} else {
@@ -3142,7 +3113,7 @@ function bosta_init_shipping_class()
 				if ($testWebhook === 'yes') {
 					$test_result = Bosta_Webhook_Manager::test_webhook_endpoint();
 					$this->update_option('TestWebhook', 'no');
-
+					
 					if ($test_result) {
 						WC_Admin_Settings::add_message(__('Webhook test successful! The endpoint is working correctly.', 'bosta'));
 					} else {
@@ -3239,66 +3210,64 @@ function bosta_setup_menu()
 	add_submenu_page('bosta-woocommerce', 'Bosta Documentation', 'Bosta Documentation', 'manage_options', 'bosta-woocommerce-documentation', 'bosta_redirect_to_documentation_page');
 }
 
-add_action('admin_enqueue_scripts', function ($hook) {
-	if ($hook === 'woocommerce_page_wc-settings' && isset($_GET['section']) && $_GET['section'] === 'bosta') {
-		// Enqueue flexship script
-		wp_enqueue_script(
-			'bosta-flexship-js',
-			plugins_url('components/settings/flexship/flexship.js', __FILE__),
-			array('jquery'),
-			filemtime(plugin_dir_path(__FILE__) . 'components/settings/flexship/flexship.js'),
-			true
-		);
-
-		// Enqueue auto sync warning script
-		wp_enqueue_script(
-			'bosta-auto-sync-warning-js',
-			plugins_url('assets/js/auto-sync-warning.js', __FILE__),
-			array('jquery'),
-			filemtime(plugin_dir_path(__FILE__) . 'assets/js/auto-sync-warning.js'),
-			true
-		);
-
-		// Enqueue auto sync warning CSS
-		wp_enqueue_style(
-			'bosta-auto-sync-warning-css',
-			plugins_url('Css/auto-sync-warning.css', __FILE__),
-			array(),
-			filemtime(plugin_dir_path(__FILE__) . 'Css/auto-sync-warning.css')
-		);
-
-		// Enqueue product description settings CSS
-		wp_enqueue_style(
-			'bosta-product-description-settings-css',
-			plugins_url('Css/product-description-settings.css', __FILE__),
-			array(),
-			filemtime(plugin_dir_path(__FILE__) . 'Css/product-description-settings.css')
-		);
-
-		// Enqueue product description settings JavaScript
-		wp_enqueue_script(
-			'bosta-product-description-settings-js',
-			plugins_url('assets/js/product-description-settings.js', __FILE__),
-			array('jquery'),
-			filemtime(plugin_dir_path(__FILE__) . 'assets/js/product-description-settings.js'),
-			true
-		);
-	}
-
-	// Enqueue tooltip script for orders page
-	if (
-		in_array($hook, ['edit.php', 'woocommerce_page_wc-orders']) &&
-		(isset($_GET['post_type']) && $_GET['post_type'] === 'shop_order') ||
-		$hook === 'woocommerce_page_wc-orders'
-	) {
-		wp_enqueue_script(
-			'bosta-tooltip-js',
-			plugins_url('assets/js/tooltip.js', __FILE__),
-			array('jquery'),
-			filemtime(plugin_dir_path(__FILE__) . 'assets/js/tooltip.js'),
-			true
-		);
-	}
+add_action('admin_enqueue_scripts', function($hook) {
+    if ($hook === 'woocommerce_page_wc-settings' && isset($_GET['section']) && $_GET['section'] === 'bosta') {
+        // Enqueue flexship script
+        wp_enqueue_script(
+            'bosta-flexship-js',
+            plugins_url('components/settings/flexship/flexship.js', __FILE__),
+            array('jquery'),
+            filemtime(plugin_dir_path(__FILE__) . 'components/settings/flexship/flexship.js'),
+            true
+        );
+        
+        // Enqueue auto sync warning script
+        wp_enqueue_script(
+            'bosta-auto-sync-warning-js',
+            plugins_url('assets/js/auto-sync-warning.js', __FILE__),
+            array('jquery'),
+            filemtime(plugin_dir_path(__FILE__) . 'assets/js/auto-sync-warning.js'),
+            true
+        );
+        
+        // Enqueue auto sync warning CSS
+        wp_enqueue_style(
+            'bosta-auto-sync-warning-css',
+            plugins_url('Css/auto-sync-warning.css', __FILE__),
+            array(),
+            filemtime(plugin_dir_path(__FILE__) . 'Css/auto-sync-warning.css')
+        );
+        
+        // Enqueue product description settings CSS
+        wp_enqueue_style(
+            'bosta-product-description-settings-css',
+            plugins_url('Css/product-description-settings.css', __FILE__),
+            array(),
+            filemtime(plugin_dir_path(__FILE__) . 'Css/product-description-settings.css')
+        );
+        
+        // Enqueue product description settings JavaScript
+        wp_enqueue_script(
+            'bosta-product-description-settings-js',
+            plugins_url('assets/js/product-description-settings.js', __FILE__),
+            array('jquery'),
+            filemtime(plugin_dir_path(__FILE__) . 'assets/js/product-description-settings.js'),
+            true
+        );
+    }
+    
+    // Enqueue tooltip script for orders page
+    if (in_array($hook, ['edit.php', 'woocommerce_page_wc-orders']) && 
+        (isset($_GET['post_type']) && $_GET['post_type'] === 'shop_order') || 
+        $hook === 'woocommerce_page_wc-orders') {
+        wp_enqueue_script(
+            'bosta-tooltip-js',
+            plugins_url('assets/js/tooltip.js', __FILE__),
+            array('jquery'),
+            filemtime(plugin_dir_path(__FILE__) . 'assets/js/tooltip.js'),
+            true
+        );
+    }
 });
 
 // AJAX handlers for fulfillment sync - Moved to Bosta_Fulfillment class
@@ -3578,5 +3547,6 @@ function bosta_custom_display_order_data_in_admin()
 			</div>
 		</div>
 	</div>
-<?php
+	<?php
 }
+
