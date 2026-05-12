@@ -37,6 +37,7 @@ $modules = [
     'app/checkout-fields-modifier/checkout-fields-modifier.php',
     'app/custom-payment-gateway/loader.php',
     'app/custom-intl-checkout-handler/custom-intl-checkout-handler.php',
+    'app/address-fields/address-fields.php',
 ];
 
 foreach ($modules as $module) {
