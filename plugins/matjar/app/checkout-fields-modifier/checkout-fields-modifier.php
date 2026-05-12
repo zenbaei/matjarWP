@@ -125,7 +125,17 @@ class Checkout_Fields_Modifier
             filemtime($base_path . 'checkout-fields-modifier.js'),
             true
         );
+        /* 
+it didint work???
 
+        wp_enqueue_script(
+            'state-area-reset-after-ajax-js',
+            $base_url . 'state-area-reset-after-ajax.js',
+            ['jquery'],
+            filemtime($base_path . 'state-area-reset-after-ajax.js'),
+            true
+        );
+*/
         wp_enqueue_style(
             'checkout-fields-modifier-css',
             $base_url . 'checkout-fields-modifier.css',
