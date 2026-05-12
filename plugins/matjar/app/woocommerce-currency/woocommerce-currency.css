@@ -1,0 +1,10 @@
+.woocommerce-Price-amount.amount bdi {
+    direction: ltr;
+    unicode-bidi: bidi-override;
+}
+
+.price_label .from,
+.price_label .to {
+    direction: ltr;
+    unicode-bidi: bidi-override;
+}
