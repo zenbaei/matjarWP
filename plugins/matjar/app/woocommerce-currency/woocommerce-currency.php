@@ -30,7 +30,7 @@ class Change_EGP_Currency_Symbol
     {
 
         if ('EGP' === $currency) {
-            $currency_symbol = 'ج.م';
+            $currency_symbol = 'م.ج';
         }
 
         return $currency_symbol;
