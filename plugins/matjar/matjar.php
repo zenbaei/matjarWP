@@ -26,10 +26,10 @@ if (!defined('MATJAR_VERSION')) {
 }
 
 $modules = [
-    'taxonomies/media-folders-taxonomy/media-folders-taxonomy.php',
-    'taxonomies/writer-taxonomy/writer-taxonomy.php',
-    'taxonomies/publisher-taxonomy/publisher-taxonomy.php',
-    'custom-fields/product-custom-fields/fields-loader.php',
+    'admin/taxonomies/media-folders-taxonomy/media-folders-taxonomy.php',
+    'admin/taxonomies/writer-taxonomy/writer-taxonomy.php',
+    'admin/taxonomies/publisher-taxonomy/publisher-taxonomy.php',
+    'admin/custom-fields/product-custom-fields/fields-loader.php',
     'admin/admin-image-zoom/admin-image-zoom.php',
     'admin/product-stock-enforcer/product-stock-enforcer.php',
     'admin/product-weight-enforcer/product-weight-enforcer.php',
