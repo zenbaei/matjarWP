@@ -39,6 +39,7 @@ $modules = [
     'app/custom-intl-checkout-handler/custom-intl-checkout-handler.php',
     'app/address-fields/address-fields.php',
     'app/woocommerce-currency/woocommerce-currency.php',
+    'app/cart-page/hide-address.php',
 ];
 
 foreach ($modules as $module) {

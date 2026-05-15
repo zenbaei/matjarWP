@@ -12,3 +12,4 @@ add_action( 'init', function () {
         switch_to_locale( get_option( 'WPLANG' ) ?: 'ar' );
     }
 }, 0 );
+

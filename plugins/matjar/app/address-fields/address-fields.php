@@ -1,49 +1,47 @@
 <?php
 
+/**
+ * Hide WooCommerce city fields for Egypt.
+ */
 class Address_Fields
 {
 
     public function __construct()
     {
 
-        add_filter(
-            'woocommerce_billing_fields',
-            array($this, 'hide_billing_city_for_egypt')
-        );
-
-        add_filter(
-            'woocommerce_shipping_fields',
-            array($this, 'hide_shipping_city_for_egypt')
+        add_action(
+            'wp_enqueue_scripts',
+            array($this, 'enqueue_assets')
         );
     }
 
-    public function hide_billing_city_for_egypt($fields)
+    /**
+     * Enqueue frontend assets.
+     */
+    public function enqueue_assets()
     {
 
-        $country = WC()->customer
-            ? WC()->customer->get_billing_country()
-            : '';
-
-        if ($country === 'EG') {
-
-            $fields['billing_city']['class'][] = 'hidden';
+        if (! is_account_page()) {
+            return;
         }
 
-        return $fields;
-    }
+        $css_path = plugin_dir_path(__FILE__) . 'address-fields.css';
+        $js_path  = plugin_dir_path(__FILE__) . 'address-fields.js';
 
-    public function hide_shipping_city_for_egypt($fields)
-    {
+        wp_enqueue_style(
+            'address-fields',
+            plugin_dir_url(__FILE__) . 'address-fields.css',
+            array(),
+            filemtime($css_path)
+        );
 
-        $country = WC()->customer
-            ? WC()->customer->get_shipping_country()
-            : '';
-
-        if ($country === 'EG') {
-            $fields['shipping_city']['class'][] = 'hidden';
-        }
-
-        return $fields;
+        wp_enqueue_script(
+            'address-fields',
+            plugin_dir_url(__FILE__) . 'address-fields.js',
+            array('jquery'),
+            filemtime($js_path),
+            true
+        );
     }
 }
 

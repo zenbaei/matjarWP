@@ -3,10 +3,6 @@
     unicode-bidi: bidi-override;
 }
 
-.woocommerce-Price-currencySymbol {
-    direction: rtl;
-    unicode-bidi: embed;
-}
 
 .price_label .from,
 .price_label .to {
