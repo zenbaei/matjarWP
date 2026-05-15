@@ -8,6 +8,8 @@
  */
 /**
  * Disable shipping calculator output completely.
+ * 
+ * Hide the shipping destination section on the cart page.
  */
 add_action('wp_head', function () {
 
