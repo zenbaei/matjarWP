@@ -196,14 +196,12 @@ class UI
             id="editors-select"
             name="%s%s"
             data-action="%s"
-            data-nonce="%s"
             data-placeholder="Search %s..."
             %s
         >',
             esc_attr($metaKey),
             $multiple ? '[]' : '',
             esc_attr($action),
-            esc_attr(wp_create_nonce('book_nonce')),
             esc_attr(strtolower($label)),
             $multiple ? 'multiple' : ''
         );
@@ -235,10 +233,19 @@ class UI
 
         wp_enqueue_script(
             'select2-ajax',
-            MATJAR_URL . 'select2-ajax.js',
+            plugin_dir_url(__FILE__) . 'select2-ajax.js',
             ['jquery', 'selectWoo'],
-            MATJAR_VERSION,
+            filemtime(__DIR__ . '/select2-ajax.js'),
             true
+        );
+
+        wp_localize_script(
+            'select2-ajax',
+            'matjarAjax',
+            [
+                'ajaxurl' => admin_url('admin-ajax.php'),
+                'nonce'   => wp_create_nonce('book_nonce'),
+            ]
         );
     }
 }

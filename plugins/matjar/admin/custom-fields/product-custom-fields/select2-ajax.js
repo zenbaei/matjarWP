@@ -53,7 +53,7 @@ jQuery(function ($) {
 
         // Required config
         let action = $el.data('action');
-        let nonce = $el.data('nonce');
+        let nonce = matjarAjax.nonce;
 
         // Optional config
         let placeholder = $el.data('placeholder') || 'Search...';
@@ -75,13 +75,14 @@ jQuery(function ($) {
                 url: ajaxurl,
                 dataType: 'json',
                 delay: 250, // debounce
-
+                //cache: false,
                 /**
                  * Build request data
                  */
                 data: function (params) {
 
                     let term = params.term || '';
+                    console.log('Select2 Request:', params);
 
                     return {
                         term: term,
@@ -94,9 +95,9 @@ jQuery(function ($) {
                  * Handle response
                  */
                 processResults: function (data, params) {
-
+                    console.log('Select2 Response:', data);
                     return {
-                        results: data
+                        results: data || []
                     };
                 },
 
@@ -121,8 +122,11 @@ jQuery(function ($) {
                         success(data);
                     });
 
-                    request.fail(function () {
-                        console.error('Select2 AJAX error:', params);
+                    request.fail(function (xhr) {
+
+                        console.log('Select2 AJAX ERROR');
+                        console.log(xhr.responseText);
+
                         failure();
                     });
 

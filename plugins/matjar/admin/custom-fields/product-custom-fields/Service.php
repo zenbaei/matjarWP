@@ -87,8 +87,12 @@ class Service
      */
     public function searchWriters(): void
     {
-
-        check_ajax_referer('book_nonce', 'nonce');
+        if (
+            empty($_REQUEST['nonce']) ||
+            !\wp_verify_nonce($_REQUEST['nonce'], 'book_nonce')
+        ) {
+            \wp_send_json_error('Nonce failed');
+        }
 
         $search = sanitize_text_field($_GET['term'] ?? '');
 
