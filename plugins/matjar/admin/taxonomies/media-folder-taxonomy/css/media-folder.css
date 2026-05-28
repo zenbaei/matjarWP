@@ -1,0 +1,8 @@
+#media-folder-filter+.select2-container {
+    margin-right: 10px;
+}
+
+#media-folder-filter {
+    display: none;
+    visibility: hidden;
+}

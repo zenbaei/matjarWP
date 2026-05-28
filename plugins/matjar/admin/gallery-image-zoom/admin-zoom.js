@@ -1,7 +1,7 @@
 (function ($) {
     $(function () {
 
-        console.log('ADMIN ZOOM READY');
+        console.log('GALLERY ZOOM READY');
 
         function openImagePopup(src) {
 
@@ -18,14 +18,14 @@
 
                 let left = (screen.availWidth - width) / 2;
                 let top = (screen.availHeight - height) / 2;
-	
-				
+
+
                 let features =
                     ["width=" + width,
                     "height=" + height,
                     "left=" + left,
                     "top=" + top,
-                    "resizable=yes"].join(",");
+                        "resizable=yes"].join(",");
 
                 let win = window.open('', '_blank', features);
 

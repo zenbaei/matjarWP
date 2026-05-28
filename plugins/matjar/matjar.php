@@ -26,11 +26,11 @@ if (!defined('MATJAR_VERSION')) {
 }
 
 $modules = [
-    'admin/taxonomies/media-folders-taxonomy/media-folders-taxonomy.php',
+    'admin/taxonomies/media-folder-taxonomy/media-folder-taxonomy.php',
     'admin/taxonomies/writer-taxonomy/writer-taxonomy.php',
     'admin/taxonomies/publisher-taxonomy/publisher-taxonomy.php',
-    'admin/custom-fields/product-custom-fields/fields-loader.php',
-    'admin/admin-image-zoom/admin-image-zoom.php',
+    'admin/custom-fields/product-custom-fields/loader.php',
+    'admin/gallery-image-zoom/gallery-image-zoom.php',
     'admin/product-stock-enforcer/product-stock-enforcer.php',
     'admin/product-weight-enforcer/product-weight-enforcer.php',
     'app/recently-viewed-widget/recently-viewed-widget.php',
@@ -40,6 +40,7 @@ $modules = [
     'app/address-fields/address-fields.php',
     'app/woocommerce-currency/woocommerce-currency.php',
     'app/cart-page/cart-page.php',
+    'admin/custom-fields/global-custom-fields/expenses-field.php',
 ];
 
 foreach ($modules as $module) {
