@@ -26,7 +26,7 @@ if (!defined('MATJAR_VERSION')) {
 }
 
 $modules = [
-    'admin/taxonomies/media-folder-taxonomy/media-folder-taxonomy.php',
+    'admin/taxonomies/media-folder-taxonomy/loader.php',
     'admin/taxonomies/writer-taxonomy/writer-taxonomy.php',
     'admin/taxonomies/publisher-taxonomy/publisher-taxonomy.php',
     'admin/custom-fields/product-custom-fields/loader.php',

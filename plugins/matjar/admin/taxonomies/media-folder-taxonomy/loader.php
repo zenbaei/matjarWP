@@ -1,6 +1,5 @@
 <?php
 
-namespace Matjar\Product_Custom_Fields;
 
 if (!defined('ABSPATH')) exit;
 
@@ -11,4 +10,5 @@ if (!defined('ABSPATH')) exit;
 require_once __DIR__ . '/media-folder-taxonomy.php';
 require_once __DIR__ . '/media-folder-crud.php';
 
-$module = new Fields();
+$module = new Media_Folder_Taxonomy();
+$crud = new Media_Folder_CRUD();

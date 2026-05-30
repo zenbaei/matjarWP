@@ -15,7 +15,6 @@ class Media_Folder_CRUD
 
     public function __construct()
     {
-
         /**
          * Bulk Delete Folder + Media
          */
@@ -109,11 +108,13 @@ class Media_Folder_CRUD
      **/
     public function delete_folder_attachments_before_term_delete($term_id, $taxonomy)
     {
-        error_log("delete_folder_attachments_before_term_delete called");
 
         if ($taxonomy !== self::TAXONOMY) {
             return;
         }
+
+        error_log("delete_folder_attachments_before_term_delete called");
+
 
         $term_id = is_object($term_id) ? $term_id->term_id : $term_id;
 
@@ -142,7 +143,7 @@ class Media_Folder_CRUD
     /**
      * When a media folder is deleted,
      * also delete all attachments inside it
-     */
+     *
     public function delete_folder_attachments($term_id, $tt_id, $taxonomy)
     {
         error_log(
@@ -173,16 +174,19 @@ class Media_Folder_CRUD
             wp_delete_attachment($attachment->ID, true);
         }
     }
+     */
 
     // Delete media folder and its attachments when product is removed from trash
     public function delete_media_folder_and_images_on_product_delete($post_id)
     {
-        error_log("delete_media_folder_and_images_on_product_delete called");
 
         // Run only for WooCommerce products
         if (get_post_type($post_id) !== 'product') {
             return;
         }
+
+        error_log("delete_media_folder_and_images_on_product_delete called");
+
 
         // Get folder id from metadata
         $folder_id = get_post_meta($post_id, '_media_folder_id', true);
