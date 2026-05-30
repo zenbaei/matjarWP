@@ -2,6 +2,9 @@
 plugins/*
 themes/*
 updraft/
+.litespeed_conf.dat
+object-cache.php
+
 
 # ✅ Allow matjar plugin
 !plugins/matjar/
