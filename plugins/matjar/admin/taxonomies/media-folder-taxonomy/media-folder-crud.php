@@ -25,8 +25,6 @@ class Media_Folder_CRUD
          * Delete Folder Hooks
          */
         add_action('pre_delete_term', [$this, 'delete_folder_attachments_before_term_delete'], 10, 2);
-    
-    //    add_action('delete_media_folder', [$this, 'delete_folder_attachments'], 10, 3);
 
         /**
          * Product Delete
@@ -118,6 +116,7 @@ class Media_Folder_CRUD
 
         $term_id = is_object($term_id) ? $term_id->term_id : $term_id;
 
+
         // Get all attachments in this folder
         $attachments = get_posts([
             'post_type'      => 'attachment',
@@ -138,43 +137,6 @@ class Media_Folder_CRUD
             }
         }
     }
-
-
-    /**
-     * When a media folder is deleted,
-     * also delete all attachments inside it
-     *
-    public function delete_folder_attachments($term_id, $tt_id, $taxonomy)
-    {
-        error_log(
-            "delete_folder_attachments called"
-        );
-        if ($taxonomy !== self::TAXONOMY) {
-            return;
-        }
-
-        $term_id = is_object($term_id) ? $term_id->term_id : $term_id;
-
-        // Get all attachments in this folder
-        $attachments = get_posts([
-            'post_type'      => 'attachment',
-            'post_status'    => 'inherit',
-            'posts_per_page' => -1,
-            'tax_query'      => [
-                [
-                    'taxonomy' => self::TAXONOMY,
-                    'field'    => 'term_id',
-                    'terms'    => $term_id,
-                ]
-            ]
-        ]);
-
-        // Delete each attachment permanently
-        foreach ($attachments as $attachment) {
-            wp_delete_attachment($attachment->ID, true);
-        }
-    }
-     */
 
     // Delete media folder and its attachments when product is removed from trash
     public function delete_media_folder_and_images_on_product_delete($post_id)

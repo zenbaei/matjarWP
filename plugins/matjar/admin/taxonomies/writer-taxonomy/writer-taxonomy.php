@@ -49,7 +49,7 @@ add_action('init', function () {
  * Manually save 'writer' taxonomy to product
  * Make sure rest is handled correctly then remove this function
  **/
-/*
+
 add_action('woocommerce_rest_insert_product_object', function ($product, $request) {
 
     if (!empty($request['writer']) && is_array($request['writer'])) {
@@ -64,7 +64,7 @@ add_action('woocommerce_rest_insert_product_object', function ($product, $reques
         );
     }
 }, 20, 2);
-*/
+
 
 /**
  * Flush rewrite rules on activation

@@ -64,7 +64,7 @@ class Fields
             '_book_year' => [
                 'label'   => 'Publishing Year',
                 'type'    => 'select',
-                'options' => $this->getYears(),
+                'options' => ['' => 'Not Provided'] + $this->getYears(),
             ],
 
             '_book_notes' => [
