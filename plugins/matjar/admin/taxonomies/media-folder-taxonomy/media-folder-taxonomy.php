@@ -31,8 +31,9 @@ class Media_Folder_Taxonomy
 
         /**
          * Admin JS
+         * Not working, the ajax loading not working
          */
-        add_action('admin_enqueue_scripts', [$this, 'enqueue_admin_js']);
+        //add_action('admin_enqueue_scripts', [$this, 'enqueue_admin_js']);
 
         /**
          * WooCommerce Meta
@@ -293,6 +294,8 @@ class Media_Folder_Taxonomy
      */
     public function add_product_media_folder_dropdown()
     {
+        error_log('add_product_media_folder_dropdown');
+
         global $post;
 
         $current_folder = get_post_meta($post->ID, '_media_folder_id', true);
@@ -458,8 +461,3 @@ class Media_Folder_Taxonomy
         }
     }
 }
-
-/**
- * Initialize Plugin
- */
-new Media_Folder_Taxonomy();

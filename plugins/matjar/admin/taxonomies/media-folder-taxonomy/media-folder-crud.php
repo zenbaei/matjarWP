@@ -289,5 +289,3 @@ class Media_Folder_CRUD
         }
     }
 }
-
-new Media_Folder_CRUD();
