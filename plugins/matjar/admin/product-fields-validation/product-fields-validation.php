@@ -158,6 +158,7 @@ if (!class_exists('Product_Fields_Validation')) {
             wp_enqueue_script(
                 'product-fields-validation',
                 plugin_dir_url(__FILE__) . 'js/product-fields-validation.js',
+                ['jquery'],
                 filemtime(__DIR__ . '/js/product-fields-validation.js'),
                 true
             );

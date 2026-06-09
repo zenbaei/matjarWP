@@ -33,6 +33,7 @@ $modules = [
     'admin/gallery-image-zoom/gallery-image-zoom.php',
     'admin/product-stock-enforcer/product-stock-enforcer.php',
     'admin/product-fields-validation/product-fields-validation.php',
+    'admin/custom-fields/global-custom-fields/expenses-field.php',
     'app/recently-viewed-widget/recently-viewed-widget.php',
     'app/checkout-fields-modifier/checkout-fields-modifier.php',
     'app/custom-payment-gateway/loader.php',
@@ -40,7 +41,7 @@ $modules = [
     'app/address-fields/address-fields.php',
     'app/woocommerce-currency/woocommerce-currency.php',
     'app/cart-page/cart-page.php',
-    'admin/custom-fields/global-custom-fields/expenses-field.php',
+    'app/single-product-page/single-product-page.php',
 ];
 
 foreach ($modules as $module) {
