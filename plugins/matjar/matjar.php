@@ -32,7 +32,7 @@ $modules = [
     'admin/custom-fields/product-custom-fields/loader.php',
     'admin/gallery-image-zoom/gallery-image-zoom.php',
     'admin/product-stock-enforcer/product-stock-enforcer.php',
-    'admin/product-weight-enforcer/product-weight-enforcer.php',
+    'admin/product-fields-validation/product-fields-validation.php',
     'app/recently-viewed-widget/recently-viewed-widget.php',
     'app/checkout-fields-modifier/checkout-fields-modifier.php',
     'app/custom-payment-gateway/loader.php',

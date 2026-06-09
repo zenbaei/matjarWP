@@ -10,9 +10,9 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-if (!class_exists('Matjar_Product_Validation')) {
+if (!class_exists('Product_Fields_Validation')) {
 
-    class Matjar_Product_Validation
+    class Product_Fields_Validation
     {
 
         /**
@@ -34,6 +34,8 @@ if (!class_exists('Matjar_Product_Validation')) {
                 'admin_footer',
                 [$this, 'force_open_product_in_new_tab']
             );
+
+            add_action('admin_enqueue_scripts', [$this, 'enqueue']);
         }
 
         /**
@@ -145,8 +147,23 @@ if (!class_exists('Matjar_Product_Validation')) {
 
 <?php
         }
+
+
+        /**
+         * Enqueue admin scripts
+         */
+        public function enqueue(): void
+        {
+
+            wp_enqueue_script(
+                'product-fields-validation',
+                plugin_dir_url(__FILE__) . 'js/product-fields-validation.js',
+                filemtime(__DIR__ . '/js/product-fields-validation.js'),
+                true
+            );
+        }
     }
 
     // Initialize
-    new Matjar_Product_Validation();
+    new Product_Fields_Validation();
 }
