@@ -744,7 +744,7 @@ function bosta_add_dynamic_area_dropdown_to_checkout($fields)
 			'label'    => __('Area', 'woocommerce'),
 			'required' => false,
 			'options'  => array(
-				'' => __('Select an option...', 'woocommerce'),
+				'' => __('حدد خيارا...', 'woocommerce'),
 			),
 			'input_class' => array(
 				'wc-enhanced-select',
@@ -770,10 +770,11 @@ function bosta_add_dynamic_area_dropdown_to_checkout($fields)
         });
 
 		console.log('Bosta Plugin: Adding dynamic area dropdown to checkout');
-
+		
+		/* Fix not selecting the area dropdown on page reload if the state is already selected and has a saved area value */
         // $('select.wc-enhanced-select').val('').trigger('change');
 		// $('#billing_state').val('').trigger('change');
-		// populate area dropdown using saved state
+		/* populate area dropdown using saved state */
     	$('#billing_state').trigger('change');
     });	
 	");

@@ -50,25 +50,25 @@ class Fields
         return [
 
             '_book_series' => [
-                'label' => 'Series',
+                'label' => 'عدد الأجزاء',
                 'type'  => 'number',
                 'default' => 1,
             ],
 
             '_book_edition' => [
-                'label' => 'Edition',
+                'label' => 'الطبعة',
                 'type'  => 'number',
-                'default' => 1,
+                'default' => 0,
             ],
 
             '_book_year' => [
-                'label'   => 'Publishing Year',
+                'label'   => 'سنة النشر',
                 'type'    => 'select',
-                'options' => ['' => 'Not Provided'] + $this->getYears(),
+                'options' => ['' => 'غير محددة'] + $this->getYears(),
             ],
 
             '_book_notes' => [
-                'label' => 'Notes',
+                'label' => 'ملاحظات',
                 'type'  => 'textarea',
             ],
         ];
@@ -113,7 +113,7 @@ class Fields
         echo '<div id="book_info_panel" class="panel woocommerce_options_panel">';
 
         // Complex fields
-        $this->renderSelect2Field($post->ID, '_book_editors', 'Editors');
+        $this->renderSelect2Field($post->ID, '_book_editors', 'المحقق');
 
         $this->renderDynamicFields($post->ID);
 
@@ -216,7 +216,7 @@ class Fields
             id="editors-select"
             name="%s%s"
             data-action="%s"
-            data-placeholder="Search %s..."
+            data-placeholder="... ابحث عن %s"
             %s
         >',
             esc_attr($metaKey),
