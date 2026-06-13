@@ -1,0 +1,49 @@
+diff --git a/originals/bosta-woocommerce.php b/plugins/bosta-woocommerce/bosta-woocommerce.php
+index 0de39e2..2ef6657 100644
+--- a/originals/bosta-woocommerce.php
++++ b/plugins/bosta-woocommerce/bosta-woocommerce.php
+@@ -8 +8 @@
+- * Version: 4.5.6
++ * Version: 4.5.7
+@@ -129 +129 @@ const BOSTA_ENV_URL_V2 = 'https://app.bosta.co/api/v2';
+-const PLUGIN_VERSION = '4.5.6';
++const PLUGIN_VERSION = '4.5.7';
+@@ -139 +139 @@ function bosta_send_api_request($method, $url, $APIKey = null, $body = null)
+-		'timeout' => 30,
++		'timeout' => 300,
+@@ -332,0 +333,4 @@ function bosta_get_city_areas()
++				// filter not covered districts
++				if (empty($district['dropOffAvailability'])) {
++					continue;
++				}
+@@ -743 +747 @@ function bosta_add_dynamic_area_dropdown_to_checkout($fields)
+-				'' => __('Select an option...', 'woocommerce'),
++				'' => __('حدد خيارا...', 'woocommerce'),
+@@ -747,0 +752,3 @@ function bosta_add_dynamic_area_dropdown_to_checkout($fields)
++			'custom_attributes' => array(
++				'data-selected' => WC()->checkout()->get_value('billing_area'),
++			),
+@@ -754 +761,8 @@ function bosta_add_dynamic_area_dropdown_to_checkout($fields)
+-            var select2_args = { minimumResultsForSearch: 5 };
++            var select2_args = {
++                minimumResultsForSearch: 5,
++                language: {
++                       noResults: function () {
++                       return 'لم يتم العثور على نتائج';
++                    }
++                }
++            };
+@@ -760,2 +774,5 @@ function bosta_add_dynamic_area_dropdown_to_checkout($fields)
+-        $('select.wc-enhanced-select').val('').trigger('change');
+-		$('#billing_state').val('').trigger('change');
++		/* Fix not selecting the area dropdown on page reload if the state is already selected and has a saved area value */
++        // $('select.wc-enhanced-select').val('').trigger('change');
++		// $('#billing_state').val('').trigger('change');
++		/* populate area dropdown using saved state */
++    	$('#billing_state').trigger('change');
+@@ -831,0 +849,2 @@ function bosta_enqueue_dynamic_area_dropdown_script()
++						var savedArea = areaDropdown.val() || areaDropdown.attr('data-selected');
+@@ -841,0 +861,4 @@ function bosta_enqueue_dynamic_area_dropdown_script()
++						if (savedArea) {
++							areaDropdown.val(savedArea);
++						}
