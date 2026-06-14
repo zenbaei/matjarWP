@@ -43,6 +43,14 @@ class Change_EGP_Currency_Symbol
         $base_url  = plugin_dir_url(__FILE__);
         $base_path = plugin_dir_path(__FILE__);
 
+        wp_enqueue_script(
+            'woocommerce-currency-js',
+            $base_url . 'woocommerce-currency.js',
+            ['jquery'],
+            filemtime($base_path . 'woocommerce-currency.js'),
+            true
+        );
+
         wp_enqueue_style(
             'woocommerce-currency-css',
             $base_url . 'woocommerce-currency.css',
