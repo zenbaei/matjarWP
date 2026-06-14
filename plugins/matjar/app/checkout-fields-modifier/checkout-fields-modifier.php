@@ -24,7 +24,7 @@ class Checkout_Fields_Modifier
         add_filter('woocommerce_checkout_fields', [$this, 'toggleFieldsRequired'], 999);
         add_action('woocommerce_checkout_process', [$this, 'sync_city_with_state']);
         add_action('woocommerce_checkout_update_order_review', [$this, 'save_billing_area_to_session']);
-
+        add_action('woocommerce_review_order_after_shipping', [$this, 'display_shipping_note']);
         add_action('wp_enqueue_scripts', [$this, 'enqueue_scripts'], 20);
     }
 
@@ -126,6 +126,27 @@ class Checkout_Fields_Modifier
         }
     }
 
+    public function display_shipping_note()
+    {
+        $chosen_methods = WC()->session->get('chosen_shipping_methods');
+
+        if (empty($chosen_methods)) {
+            return;
+        }
+
+        error_log(print_r(WC()->session->get('chosen_shipping_methods'), true));
+
+        if (in_array('flat_rate:2', $chosen_methods, true)) {
+            echo '<tr class="shipping-note">
+                <td colspan="2">
+                  <div class="shipping-note-content">
+                يستغرق الشحن داخل القاهرة من 3-4 أيام عمل وخارجها من 4-7 أيام عمل.
+                  </div>
+                </td>
+              </tr>';
+        }
+    }
+
     /**
      * Enqueue checkout JS file.
      *
@@ -145,17 +166,7 @@ class Checkout_Fields_Modifier
             filemtime($base_path . 'checkout-fields-modifier.js'),
             true
         );
-        /* 
-it didint work???
 
-        wp_enqueue_script(
-            'state-area-reset-after-ajax-js',
-            $base_url . 'state-area-reset-after-ajax.js',
-            ['jquery'],
-            filemtime($base_path . 'state-area-reset-after-ajax.js'),
-            true
-        );
-*/
         wp_enqueue_style(
             'checkout-fields-modifier-css',
             $base_url . 'checkout-fields-modifier.css',

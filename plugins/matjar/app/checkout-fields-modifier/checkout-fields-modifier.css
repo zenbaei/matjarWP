@@ -9,3 +9,9 @@
 #shipping_postcode_field {
     display: none;
 }
+
+.shipping-note-content {
+    text-align: right;
+    font-size: 14px;
+    color: #666;
+}

@@ -42,6 +42,7 @@ $modules = [
     'app/woocommerce-currency/woocommerce-currency.php',
     'app/cart-page/cart-page.php',
     'app/single-product-page/single-product-page.php',
+    'app/login/login.php',
 ];
 
 foreach ($modules as $module) {

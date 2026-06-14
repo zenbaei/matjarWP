@@ -24,13 +24,15 @@ class Change_EGP_Currency_Symbol
      * @param string $currency_symbol Current currency symbol.
      * @param string $currency         Currency code.
      *
+     * 
+     * 
      * @return string
      */
     public function change_symbol($currency_symbol, $currency)
     {
 
         if ('EGP' === $currency) {
-            $currency_symbol = 'م.ج';
+            $currency_symbol = 'ج.م';
         }
 
         return $currency_symbol;
