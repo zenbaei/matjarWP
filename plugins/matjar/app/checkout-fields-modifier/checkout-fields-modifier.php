@@ -23,6 +23,8 @@ class Checkout_Fields_Modifier
     {
         add_filter('woocommerce_checkout_fields', [$this, 'toggleFieldsRequired'], 999);
         add_action('woocommerce_checkout_process', [$this, 'sync_city_with_state']);
+        add_action('woocommerce_checkout_update_order_review', [$this, 'save_billing_area_to_session']);
+
         add_action('wp_enqueue_scripts', [$this, 'enqueue_scripts'], 20);
     }
 
@@ -103,6 +105,24 @@ class Checkout_Fields_Modifier
 
         if (!empty($_POST['shipping_state'])) {
             $_POST['shipping_city'] = sanitize_text_field($_POST['shipping_state']);
+        }
+    }
+
+    public function save_billing_area_to_session($posted_data)
+    {
+        error_log('posted_data = ' . var_export($posted_data, true));
+        parse_str($posted_data, $data);
+
+        if (!empty($data['billing_area']) && WC()->session) {
+            WC()->session->set(
+                'billing_area',
+                sanitize_text_field($data['billing_area'])
+            );
+
+            error_log(
+                'session billing_area = ' .
+                    var_export(WC()->session->get('billing_area'), true)
+            );
         }
     }
 

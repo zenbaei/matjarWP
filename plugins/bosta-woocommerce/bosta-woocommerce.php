@@ -739,6 +739,11 @@ function bosta_add_dynamic_area_dropdown_to_checkout($fields)
 			$field_priority = $fields['billing']['billing_state']['priority'] + 1;
 		}
 
+		// Set the selected area from session if available, otherwise default to empty string (php part)
+		$selected = WC()->session
+			? WC()->session->get('billing_area')
+			: '';
+
 		$fields['billing']['billing_area'] = array(
 			'type'     => 'select',
 			'label'    => __('Area', 'woocommerce'),
@@ -750,8 +755,9 @@ function bosta_add_dynamic_area_dropdown_to_checkout($fields)
 				'wc-enhanced-select',
 			),
 			'custom_attributes' => array(
-				'data-selected' => WC()->checkout()->get_value('billing_area'),
+				'data-selected' => $selected,
 			),
+			'class' => array('update_totals_on_change'), // Triggers updated_checkout when Area changes.
 			'priority' => $field_priority,
 		);
 
@@ -845,7 +851,7 @@ function bosta_enqueue_dynamic_area_dropdown_script()
 					$(document).on('change', stateSelector, function() {
 						var selectedState = $(this).val();
 						var areaDropdown = $(areaSelector);
-
+						// Get the custom attr value that was set by php (data-selected) to re-select it after repopulating the dropdown, if it exists
 						var savedArea = areaDropdown.val() || areaDropdown.attr('data-selected');
 
 						areaDropdown.empty();
