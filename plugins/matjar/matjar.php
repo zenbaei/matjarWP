@@ -43,6 +43,8 @@ $modules = [
     'app/cart-page/cart-page.php',
     'app/single-product-page/single-product-page.php',
     'app/login/login.php',
+    'app/search/widget-search-query.php',
+    'test.php',
 ];
 
 foreach ($modules as $module) {

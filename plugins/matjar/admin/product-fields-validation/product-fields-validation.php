@@ -96,7 +96,7 @@ if (!class_exists('Product_Fields_Validation')) {
             if (!$product) return;
 
             // Skip drafts
-            if (in_array($product->get_status(), ['draft', 'auto-draft'])) {
+            if (in_array($product->get_status(), ['draft', 'auto-draft', 'pending'])) {
                 return;
             }
 
@@ -156,16 +156,29 @@ if (!class_exists('Product_Fields_Validation')) {
             if (empty($tag_ids)) {
                 $errors[] = 'Please choose at least one product tag.';
             } else {
-                // Remove tag 351 if present
-                $filtered_tag_ids = array_diff($tag_ids, [351]);
+                // Save filtered tags (without 351)
+                $product->set_tag_ids($tag_ids);
+            }
 
-                // If only tag 351 was set, don't save any tags
-                if (empty($filtered_tag_ids)) {
-                    $product->set_tag_ids([]);
+            /**
+             * Validate Writer
+             */
+            $writer_terms = [];
+
+            if (isset($_POST['tax_input']['writer'])) {
+                $writer_input = $_POST['tax_input']['writer'];
+
+                if (is_array($writer_input)) {
+                    $writer_terms = array_filter(array_map('trim', $writer_input));
                 } else {
-                    // Save filtered tags (without 351)
-                    $product->set_tag_ids($filtered_tag_ids);
+                    $writer_terms = array_filter(array_map('trim', explode(',', (string) $writer_input)));
                 }
+            } elseif ($product->get_id()) {
+                $writer_terms = wp_get_post_terms($product->get_id(), 'writer', ['fields' => 'ids']);
+            }
+
+            if (empty($writer_terms)) {
+                $errors[] = 'Please choose at least one writer.';
             }
 
             /**
