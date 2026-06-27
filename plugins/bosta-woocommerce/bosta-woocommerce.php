@@ -812,7 +812,7 @@ function bosta_add_area_dropdown_admin_order($order)
 		}
 
 		echo '<p class="form-field" style="width:100%">' .
-			'<label for="billing_area">' . __('Area', 'woocommerce') . '</label>' .
+			'<label for="billing_area">' . __('الحي', 'woocommerce') . '</label>' .
 			'<select name="billing_area" id="billing_area" class="wc-enhanced-select" >' .
 			$areas_options .
 			'</select>' .
