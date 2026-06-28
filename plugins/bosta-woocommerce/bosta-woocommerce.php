@@ -746,7 +746,7 @@ function bosta_add_dynamic_area_dropdown_to_checkout($fields)
 
 		$fields['billing']['billing_area'] = array(
 			'type'     => 'select',
-			'label'    => __('Area', 'woocommerce'),
+			'label'    => __('الحي', 'woocommerce'),
 			'required' => false,
 			'options'  => array(
 				'' => __('حدد خيارا...', 'woocommerce'),
@@ -812,7 +812,7 @@ function bosta_add_area_dropdown_admin_order($order)
 		}
 
 		echo '<p class="form-field" style="width:100%">' .
-			'<label for="billing_area">' . __('الحي', 'woocommerce') . '</label>' .
+			'<label for="billing_area">' . __('Area', 'woocommerce') . '</label>' .
 			'<select name="billing_area" id="billing_area" class="wc-enhanced-select" >' .
 			$areas_options .
 			'</select>' .

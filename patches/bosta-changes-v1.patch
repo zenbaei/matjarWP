@@ -1,5 +1,5 @@
 diff --git a/patches/originals/bosta-woocommerce.php b/plugins/bosta-woocommerce/bosta-woocommerce.php
-index 0de39e2..6524e69 100644
+index 0de39e2..3baed7a 100644
 --- a/patches/originals/bosta-woocommerce.php
 +++ b/plugins/bosta-woocommerce/bosta-woocommerce.php
 @@ -8 +8 @@
@@ -21,6 +21,9 @@ index 0de39e2..6524e69 100644
 +		$selected = WC()->session
 +			? WC()->session->get('billing_area')
 +			: '';
+@@ -740 +749 @@ function bosta_add_dynamic_area_dropdown_to_checkout($fields)
+-			'label'    => __('Area', 'woocommerce'),
++			'label'    => __('الحي', 'woocommerce'),
 @@ -743 +752 @@ function bosta_add_dynamic_area_dropdown_to_checkout($fields)
 -				'' => __('Select an option...', 'woocommerce'),
 +				'' => __('حدد خيارا...', 'woocommerce'),
@@ -47,9 +50,6 @@ index 0de39e2..6524e69 100644
 +		// $('#billing_state').val('').trigger('change');
 +		/* populate area dropdown using saved state */
 +    	$('#billing_state').trigger('change');
-@@ -792 +815 @@ function bosta_add_area_dropdown_admin_order($order)
--			'<label for="billing_area">' . __('Area', 'woocommerce') . '</label>' .
-+			'<label for="billing_area">' . __('الحي', 'woocommerce') . '</label>' .
 @@ -830,0 +854,2 @@ function bosta_enqueue_dynamic_area_dropdown_script()
 +						// Get the custom attr value that was set by php (data-selected) to re-select it after repopulating the dropdown, if it exists
 +						var savedArea = areaDropdown.val() || areaDropdown.attr('data-selected');
