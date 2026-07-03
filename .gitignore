@@ -34,9 +34,8 @@ languages/loco/themes/*
 !languages/loco/themes/xstore-ar.po
 
 # ✅ Allow xstore child theme
-themes/xstore/*          # re-ignore everything inside xstore
-!themes/xstore/xstore-child/
-!themes/xstore/xstore-child/**
+themes/*          # re-ignore everything inside xstore
+!themes/xstore/framework/woo.php
 
 # Other ignores
 ai1wm-backups/

@@ -1,0 +1,7 @@
+diff --git a/patches/originals/woo.php b/themes/xstore/framework/woo.php
+index 25200c3..310ebbc 100644
+--- a/patches/originals/woo.php
++++ b/themes/xstore/framework/woo.php
+@@ -5101 +5101 @@ if ( !function_exists('etheme_woocommerce_force_proper_login_redirect') ) {
+-            $redirect = wc_get_page_permalink( 'myaccount' ) . '?logged_in=' . time() . '&nocache=' . uniqid();
++            $redirect = wc_get_page_permalink( 'home' ) . '?logged_in=' . time() . '&nocache=' . uniqid();

@@ -6,27 +6,14 @@ if (! defined('ABSPATH')) {
 
 class Login
 {
-
     public function __construct()
     {
 
-        add_action(
-            'wp_login',
-            array($this, 'redirect_after_login'),
-            9999,
-            2
-        );
-    }
+        add_filter('etheme_woocommerce_origin_login_redirect', '__return_true');
 
-    public function redirect_after_login($user_login, $user)
-    {
-
-        if (wp_doing_ajax()) {
-            return;
-        }
-
-        wp_safe_redirect(home_url());
-        exit;
+        add_filter('woocommerce_login_redirect', function ($redirect, $user) {
+            return home_url('/');
+        }, 9999, 2);
     }
 }
 
